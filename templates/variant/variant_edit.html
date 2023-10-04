@@ -1,0 +1,82 @@
+{%extends 'partials/base1.html'%}
+{load static}
+
+
+{%block content%}
+
+<section class="content-main ">
+    <h2>Edit Variant</h2>
+    <br>
+    <div class="col-lg-8 ">
+        <div class="card">
+            <div class="card-body">
+                <form action=""
+                    enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    <div style="width: 100px;" class="">
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Variant
+                            Name</label>
+                        <select class="form-select" name="variant_name">
+                            <option value="{{ c.product.id }}">{{ c.product.product_name }}</option>
+                            {% for product in variant_list.product %}
+                            {% if product.id != c.product.id %}
+                            <option value="{{ product.id }}">{{ product.product_name }}
+                            </option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Size</label>
+                        <select class="form-select" name="variant_size">
+                            <option value="{{ c.size.id }}">{{ c.size.size_range }}
+                            </option>
+                            {% for size in variant_list.size_range %}
+                            {% if size.id != c.size.id %}
+                            <option value="{{ size.id }}">{{ size.size_range }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Color</label>
+                        <select class="form-select" name="variant_color">
+                            <option value="{{ c.color.id }}">{{ c.color.color_name }}
+                            </option>
+                            {% for color in variant_list.color_name %}
+                            {% if color.id != c.color.id %}
+                            <option value="{{ color.id }}">{{ color.color_name }}
+                            </option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+    
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Quantity</label>
+                        <input name="variant_quantity" value="{{ c.quantity }}"
+                            type="text" id="form3Example3cg"
+                            class="form-control form-control-lg" />
+                    </div>
+    
+    
+                    <div class="d-flex justify-content-center">
+                        <button type="submit"
+                            class="btn btn-primary"
+                            type="submit">Save </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+      
+                                       
+    </div>
+    
+
+
+</section>    
+
+{%endblock content%}

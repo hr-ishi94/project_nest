@@ -1,0 +1,128 @@
+{%extends 'partials/base1.html'%}
+{%load  static%}
+
+{%block content%}
+
+<section class="content-main">
+    
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">User Management</h2>
+            
+        </div>
+        
+    </div>
+    
+    <div class="card mb-4">
+        <header class="card-header">
+            <div class="row gx-3">
+                <div class="col-lg-4 col-md-6 me-auto">
+                    <div class="input-group">
+                        <div class="form-outline">
+                            <form action="{%url 'user_sort'%}" method="POST">
+                            {% csrf_token %}
+                                <div>
+
+                                    <input type="search" placeholder="Search..." id="form1" name="search" class="form-control" />
+                                    
+                                    <button type="submit" class="btn btn-primary" style="postion:absolute; left:190px;bottom:40px; height:40px;">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            </form>
+                      </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-6">
+                    <form id="user-status-form" method="post" action="{%url 'user_block_status'%}">
+                        {% csrf_token %}
+                        <div class="col-lg-2 col-6 col-md-3">
+                            <select class="form-select" name="name" id="status-select" style="width: 130px;">
+                                <option value="">Status</option>
+                                <option value="Blocked">Blocked</option>
+                                <option value="Active">Active</option>
+                                <option value="All">All</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="auto_submit" value="true">
+                    </form>
+                </div>
+               
+            </div>
+        </header>
+        <!-- card-header end// -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class='text-uppercase'>
+                            <th scope="col">id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Phone number</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" class="text-end">Action</th>
+                          </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr class="text-uppercase">
+                            <td style="text-align: center;">{{ user.id }}</td>
+                            <td><b>{{ user.first_name }}</td>
+                            <td><b>{{ user.username }}</td>
+                            <td><b>{{ user.email }}</td>
+
+                            <td>
+                            {% if user.is_active %}
+                            <span class="badge rounded-pill alert-success">Active</span>
+                            {% else %}
+                            <span class="badge rounded-pill alert-warning">Deactive</span>
+                            {% endif %}
+                            </td>
+                        
+                            <td class="text-end">
+                              {% if user.is_active %}
+                                <a href="{% url 'blockuser' user.id %}" class="btn btn-md rounded font-sm" 
+                                    style="background-color: red; color: white;">Block</a>
+                              {% else %}
+                                <a href="{% url 'blockuser' user.id %}" class="btn btn-md rounded font-sm"
+                                    style="background-color: green; color: white;">Unblock</a>
+                              {% endif %}
+                             </td>
+                        </tr>
+                        {% endfor %}
+
+                        <script>
+                          document.addEventListener('DOMContentLoaded', function () {
+                              const statusSelect = document.getElementById('status-select');
+                              
+                              statusSelect.addEventListener('change', function () {
+                                  document.getElementById('user-status-form').submit();
+                              });
+                          });
+                        </script>
+                    </tbody>
+                </table>
+            </div>
+            <!-- table-responsive//end -->
+        </div>
+        <!-- card-body end// -->
+    </div>
+    <div class="pagination-area mt-30 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                <li class="page-item"><a class="page-link" href="#">02</a></li>
+                <li class="page-item"><a class="page-link" href="#">03</a></li>
+                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">16</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>
+{%endblock content%}
+           
+            
