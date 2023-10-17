@@ -71,6 +71,17 @@ def remove_cart(request,cart_id):
                
     return redirect('cart')
 
+@login_required(login_url='userlogin1')
+def clear_cart(request):
+    try:
+        cart_clear= Cart.objects.all()
+        cart_clear.delete()
+        messages.success(request,'Cart cleared !')
+    except:
+        return redirect('cart')    
+    
+    return redirect('cart')
+
 # @login_required(login_url='user_login1')
 def add_cart(request):
     if request.method =='POST':

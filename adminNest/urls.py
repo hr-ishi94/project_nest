@@ -9,6 +9,7 @@ urlpatterns = [
     path('user_sort/',views.user_sort,name='user_sort'),
     path('user_block_status/',views.user_block_status,name='user_block_status'),
     path('admin_logout1/',views.admin_logout1,name='admin_logout1'),
+    path('admin/user_reviews/',views.admin_review,name='admin_review')
     
     
 ]

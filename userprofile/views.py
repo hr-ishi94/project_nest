@@ -5,7 +5,11 @@ from django.contrib import messages
 from .models import Address
 from cart.models import Cart
 from wishlist.models import Wishlist
+from checkout.models import Order,OrderItem,Itemstatus
+from variant.models import VariantImage
 
+from django.utils import timezone
+from datetime import timedelta
 
 # validators
 from django.core.validators import validate_email
@@ -23,8 +27,8 @@ def userprofile(request):
     address =Address.objects.filter(user=request.user,is_available=True )
     cart_count =Cart.objects.filter(user =request.user).count()
     wishlist_count =Wishlist.objects.filter(user=request.user).count()
-    # order =Order.objects.filter(user=request.user) 
-    # last_order=Order.objects.filter(user=request.user).last()
+    order =Order.objects.filter(user=request.user) 
+    last_order=Order.objects.filter(user=request.user).last()
     # try:
         # wallet =Wallet.objects.get(user=request.user)
     # except:
@@ -35,9 +39,9 @@ def userprofile(request):
         'address':address,
         'wishlist_count':wishlist_count, 
         'cart_count':cart_count,
-        # 'order':order,
+        'order':order,
         # 'wallet' :wallet,
-        # 'last_order': last_order,
+        'last_order': last_order,
         
             
         }
@@ -389,5 +393,43 @@ def delete_address(request,delete_id):
     messages.success(request,' Address deleted successfully!')
     
     return redirect('userprofile')
+
+def order_view_user(request,view_id):
+    try:
+        orderview = Order.objects.get(id=view_id)
+        address = Address.objects.get(id=orderview.address.id)
+        products = OrderItem.objects.filter(order=view_id)
+        variant_ids = [product.variant.id for product in products]
+        image = VariantImage.objects.filter(variant__id__in=variant_ids).distinct('variant__color')
+        item_status_o=Itemstatus.objects.all()
+        cart_count =Cart.objects.filter(user =request.user).count()
+        wishlist_count =Wishlist.objects.filter(user=request.user).count()
+        date = orderview.update_at + timedelta(days=3)
+
+        if date >= timezone.now():
+            date = True
+        else:
+            date = False
+        # print(date,'aaaaaaaaaaaaaaaaaaa')   
+        
+        context = {
+            'date' :date,
+            'orderview': orderview,
+            'address': address,
+            'products': products,
+            'image' :image,
+            'item_status_o' : item_status_o ,
+            'wishlist_count':wishlist_count, 
+            'cart_count':cart_count,
+            
+        }   
+        return render(request,'userprofile/order_view_user.html',context)
+
+    except Order.DoesNotExist:
+        print("Order does not exist")
+    except Address.DoesNotExist:
+        print("Address does not exist")
+    return redirect('userprofile') 
+
             
 

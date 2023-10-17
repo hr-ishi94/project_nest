@@ -15,7 +15,10 @@ class category (models.Model):
 
     class Meta:
         verbose_name = 'category'
-        verbose_name_plural ='categories'    
+        verbose_name_plural ='categories'   
+
+    def __str__(self):
+        return self.categories
 
 
 # Create your models here.

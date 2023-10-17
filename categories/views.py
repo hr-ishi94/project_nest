@@ -126,6 +126,26 @@ def category_search(request):
         messages.error(request,'Search not found!')
         return redirect('categories')
 
+def category_view(request):
+    catg=category.objects.filter(is_available=True)
+    context={
+        'category':catg
+    }
+    return render(request,'category/category_view.html',context)
+
+def category_product_view(request, c_id):
+    category_instance = category.objects.get(id=c_id)
+    products = Product.objects.filter(category=category_instance)
+    context = {
+        'category': category_instance,
+        'products': products
+    }
+    return render(request, 'category/category_product_view.html', context)
+
+
+
+
+
   
 
 

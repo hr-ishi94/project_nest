@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from user.models import *
 from django.db.models import Q
+from products.models import ProductReview
 
 def admin_login1(request):
     if request.method=='POST':
@@ -35,17 +36,17 @@ def admin_login1(request):
     return render(request,'adminNest/admin_login1.html')
 
 
-# @login_required(login_url='admin_login1')
+@login_required(login_url='admin_login1')
 def dashboard(request):
     return render(request,'adminNest/dashboard.html')
 
-# @login_required(login_url='admin_login1')
+@login_required(login_url='admin_login1')
 def usermanagement_1(request):
     users = CustomUser.objects.all().order_by('id')
     return render(request,'adminNest/usermanagement.html',{'users':users})
 
 
-# @login_required(login_url='admin_login1')   
+@login_required(login_url='admin_login1')   
 def blockuser(request,user_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -58,7 +59,7 @@ def blockuser(request,user_id):
         user.save()
     return redirect('usermanagement_1')
 
-# @login_required(login_url='admin_login1')
+@login_required(login_url='admin_login1')
 def user_sort(request):
     search= request.POST.get('search')
     if search is None or search.strip()=='':
@@ -72,7 +73,7 @@ def user_sort(request):
         return redirect('usermanagement_1')
     return render(request,'adminNest/usermanagement.html',{'users':users})
 
-# @login_required(login_url='admin_login1')
+@login_required(login_url='admin_login1')
 def user_block_status(request):
     name=request.POST.get('name')
     if name=='Active':
@@ -87,6 +88,12 @@ def user_block_status(request):
     else:
         return render(request,'adminNest/usermanagement.html')
     
+def admin_review(request):
+    reviews=ProductReview.objects.all()
+    
+    return render(request,'adminNest/admin_review.html',{'reviews':reviews})
+
+
 # @login_required(login_url='admin_login1')
 def admin_logout1(request):
     logout(request)

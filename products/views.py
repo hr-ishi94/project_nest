@@ -4,6 +4,7 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 from variant.models import *
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 
 
@@ -12,11 +13,19 @@ def product(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
     product=Product.objects.filter(is_available=True).order_by('id')
+    p=Paginator(Product.objects.filter(is_available=True).order_by('id'),8)
+    page=request.GET.get('page')
+    product_page=p.get_page(page)
+    page_nums='a'*product_page.paginator.num_pages
 
     product_list={
         'product':product,
         'categories':category.objects.filter(is_available=True).order_by('id'),
-        'offer': Offer.objects.filter(is_available= True).order_by('id')
+        'offer': Offer.objects.filter(is_available= True).order_by('id'),
+        'product_page':product_page,
+        'page_nums':page_nums,
+        
+
 
     }
 
@@ -98,7 +107,7 @@ def product_edit(request,product_id):
         name=request.POST['product_name']
         price=request.POST['product_price']
         category_id=request.POST.get('category')
-        offer_id=request.POST.get('offer')
+        # offer_id=request.POST.get('offer')
         product_description = request.POST.get('product_description')
 
         if name.strip()=='' or price.strip()=='':
@@ -106,10 +115,10 @@ def product_edit(request,product_id):
             return redirect('product')
         
         category_obj= category.objects.get(id=category_id)
-        if offer_id=='':
-            offer_id=None
-        else:
-            offer_obj=Offer.objects.get(id=offer_id)   
+        # if offer_id=='':
+        #     offer_id=None
+        # else:
+        #     offer_obj=Offer.objects.get(id=offer_id)   
 
         if Product.objects.filter(product_name=name).exists():
             check=Product.objects.get(id=product_id)
@@ -123,7 +132,7 @@ def product_edit(request,product_id):
         editproduct.product_name=name
         editproduct.product_price=price
         editproduct.category=category_obj
-        editproduct.offer=offer_obj
+        # editproduct.offer=offer_obj
         editproduct.product_description=product_description
         editproduct.save()
         messages.success(request,'Product edited successfully!')

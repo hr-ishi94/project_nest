@@ -1,0 +1,377 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{%load mathfilters%}
+
+{% block content %}
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                <span></span> Shop
+                <span></span> Checkout
+            </div>
+        </div>
+    </div>
+    <div class="container mb-80 mt-50">
+        <div class="row">
+            <div class="col-lg-8 mb-40">
+                <h1 class="heading-2 mb-10">Checkout</h1>
+                <div class="d-flex justify-content-between">
+                    <h6 class="text-body">There are 
+                        {%if cart_count%}
+                        <span class="text-brand">{{cart_count}}</span> 
+                        {%else%}
+                        <span class="text-brand">No</span>
+                        {%endif%}
+                        products in your cart</h6>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="row mb-50">
+                    
+                    <div class="col-lg-6">
+                        <form method="post" class="apply-coupon">
+                            <input type="text" placeholder="Enter Coupon Code...">
+                            <button class="btn  btn-md" name="login">Apply Coupon</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <h4 class="mb-30">Billing Details</h4>
+                    <div  >
+                        
+                        <p>The following addresses will be used on the checkout page by default.</p>
+                        <a href="{% url 'add_address' 2 %}"
+                            class="btn btn-outline-primary-2"><span>Add
+                                address</span><i class="icon-long-arrow-right"></i></a>
+                    </div>
+                    <form action="{% url 'placeorder' %}" method="POST" id="orderform">
+                        {% csrf_token %}
+                        {% for i in address %}
+                        <div class="col-lg-6">
+                            <br>
+                            <div class="card card-dashboard">
+                                <div class="card-body">
+                                    <tr class="summary-shipping-row">
+                                        <td>
+                                            <div class="d">
+                                                <div class="form-check">
+                                                    <input type="radio" value="{{i.id}}" id="free-shipping{{ forloop.counter }}"
+                                                           name="address" class="form-check-input">
+                                                    <label class="form-check-label"
+                                                           for="free-shipping{{ forloop.counter }}">
+                                                        Set Default Address
+                                                    </label>
+                                                </div>
+                                            </div>
+                                    </tr>
+                                   
+                                   
+                                    <!-- End .card-title -->
+                                    <br>
+                                   
+                                </div><!-- End .card-body -->
+                                
+                            </div>
+                            <div class="card text-center" >
+                                <div class="card-body">
+                                    <table>
+                                        <tr>
+                                            <td><strong>First Name</strong></td>
+                                            <td>{{i.first_name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Last Name</strong></td>
+                                            <td>{{i.last_name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Phone Number</strong></td>
+                                            <td>{{i.phone}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Email</strong></td>
+                                            <td>{{i.email}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Address</strong></td>
+                                            <td>'{{i.address}}', 
+                                                <br>
+                                                {{i.city}}, 
+                                                {{i.state}}, 
+                                                {{i.country}}, 
+                                                {{i.pincode}}</td>
+                                            
+                                        </tr>
+                                    </table>
+                                    
+                                  
+                                </div>
+                            </div><!-- End .card-dashboard -->
+                        </div><!-- End .col-lg-6 -->
+        
+        
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="border p-40 cart-totals ml-30 mb-50">
+                    <div class="d-flex align-items-end justify-content-between mb-30">
+                        <h4>Your Order</h4>
+                        <h4 class="text-muted" name='subtotal'>Subtotal:<span class='text-brand'>₹{{grand_total}}<span></h4>
+                    </div>
+                    <div class="divider-2 mb-30"></div>
+                    <div class="table-responsive order_table checkout">
+                        <table class="table no-border">
+                            <tbody>
+                                {%for i in cartitems%}
+                                <tr>
+                                    
+                                    <td>
+                                        <h6 class="w-160 mb-5"><a href="shop-product-full.html" class="text-heading">{{i.variant.product.product_name}}</a></h6></span>
+                                        <div class="product-rate-cover">
+                                            <div class="product-rate d-inline-block">
+                                                <div class="product-rating" style="width:90%">
+                                                </div>
+                                            </div>
+                                            <span class="font-small ml-5 text-muted"> (4.0)</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-muted pl-20 pr-20">X {{i.product_qty}}</h6>
+                                    </td>
+                                    <td>
+                                        <h4 class="text-brand">₹ {{i.variant.product.product_price|mul:i.product_qty}}</h4>
+                                    </td>
+                                </tr>
+                               {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="payment ml-30">
+                    <h4 class="mb-30">Payment</h4>
+                    <div class="card">
+                        <div class="card-header" id="heading-3">
+                            <h6 class="card-title">
+                                <a class="collapsed" role="button" data-toggle="collapse"
+                                href="#collapse-3" aria-expanded="false" aria-controls="collapse-5" data-payment-method="cod" role="button"  >
+                                Cash on delivery
+                             
+                                
+                            </a>
+                                   
+                            </h6>
+                        </div><!-- End .card-header -->
+                        <div id="collapse-3" class="collapse" aria-labelledby="heading-3"
+                            data-parent="#accordion-payment">
+                            <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit
+                                amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis
+                                eros.
+                            </div><!-- End .card-body -->
+                        </div><!-- End .collapse -->
+                    </div><!-- End .card -->
+
+                    <div class="card">
+                        <div class="card-header" id="payment" data-payment-method="razorpay">
+                            <h6 class="card-title">
+                               
+                                <a class="collapsed" role="button" data-toggle="collapse"
+                                href="#collapse-4" aria-expanded="false" aria-controls="collapse-5"   id="payment" data-payment-method="razorpay" role="button"   >
+                                Razor pay
+                             
+                                
+                            </a> 
+                            </h6>
+                        </div><!-- End .card-header -->
+                        <div id="collapse-4" class="collapse" aria-labelledby="heading-4"
+                            data-parent="#accordion-payment">
+                            <div class="card-body">
+                                Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non,
+                                semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis
+                                fermentum.
+                            </div><!-- End .card-body -->
+                        </div><!-- End .collapse -->
+                    </div><!-- End .card -->
+
+                    <div class="card">
+                        <div class="card-header" id="heading-5">
+                            <h6 class="card-title">
+                                <a class="collapsed" role="button" data-toggle="collapse"
+                                    href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+                                    Credit Card 
+                                    <img src="{% static 'cart/payments-summary.png' %}"
+                                        alt="payments cards">
+                                </a>
+                            </h6>
+                        </div><!-- End .card-header -->
+                        <div id="collapse-5" class="collapse" aria-labelledby="heading-5"
+                            data-parent="#accordion-payment">
+                            <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem
+                                ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque
+                                volutpat mattis eros. Lorem ipsum dolor sit ame.
+                            </div><!-- End .card-body -->
+                        </div><!-- End .collapse -->
+                    </div>
+                    <br><!-- End .card -->
+                    <button type="submit"  class="btn btn-sm btn-outline-primary-2 purchase placeorder " id="orderform"><span> Place Order
+                </div><!-- End .accordion -->
+
+                    </span><i class="icon-long-arrow-right"></i></button>
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js"></script>
+                    
+                    <script src="https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js"></script>
+                    
+                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+                    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+                    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                    
+                    <script>
+                        $(document).ready(function() {
+                            $('.purchase').click(function(e) {
+                                e.preventDefault();
+                      
+                                var fname = $("[name='first_name']").val();
+                                var phone = $("[name='phone']").val();
+                                var email = $("[name='email']").val();
+                                var couponOrder = $("[name='couponcheck']").val();
+                                var order_note = $("[name='ordernote']").val();
+                                var token = $("[name='csrfmiddlewaretoken']").val();
+                                var selectedAddress = $("input[name='address']:checked").val();
+                                var paymentMethod = $("a[data-toggle='collapse'][aria-expanded='true']").data('payment-method');
+                      
+                                if (!selectedAddress) {
+                                    Swal.fire("Alert!", "Address field is mandatory!", "error");
+                                    console.log('Address field is empty');
+                                    return false;
+                                }if (!paymentMethod) {
+                                      Swal.fire("Alert!", "payment field is mandatory!", "error");
+                                      console.log('Address field is empty');
+                                      return false;    
+                                } else {
+                                    var data = {
+                  
+                                        "payment_method": paymentMethod,
+                                        "couponOrder": couponOrder,
+                                        "order_note": order_note,
+                                        "address": selectedAddress,
+                                        "csrfmiddlewaretoken": token
+                                    };
+                      
+                                    console.log(data, '11111111111111111111111');
+                      
+                                    // Check the selected payment method and execute the corresponding AJAX request
+                                    if (paymentMethod === "cod") {
+                                      $.ajax({
+                                          method: "POST",
+                                          url: "{% url 'placeorder' %}",
+                                          data: data,
+                                          dataType: 'json'
+                                      }).done(function(response) {
+                                          console.log(response);
+                      
+                                          if (response.status === 'cannot place order') {
+                                              Swal.fire("Error!", response.status, "error");
+                                              $('.placeorder').load(location.href + " .placeorder");
+                                          } else if (response.status === 'Your order has been placed successfully') {
+                                              Swal.fire("Congratulations!", response.status, "success");
+                                              $('.placeorder').load(location.href + " .placeorder");
+                                          } else {
+                                              Swal.fire("Error!", response.status, "error");
+                                              $('.placeorder').load(location.href + " .placeorder");
+                                          }
+                                          window.location.href = '/';
+                                      }).fail(function(xhr, errmsg, err) {
+                                          alert('Error: ' + errmsg);
+                                          console.log(xhr.responseText);
+                                          console.log(err);
+                                      });
+                                    } 
+                                    
+                                    else if (paymentMethod === "razorpay") {
+                                        // The Razorpay code from the second script goes here
+                                        $.ajax({
+                                          method:"GET",
+                                          url:"{% url 'razarypaycheck' %}",
+                                          success: function(response) {
+                                           var options = {
+                                             "key": "rzp_test_UxAf0X95pA9IRt", // Enter the Key ID generated from the Dashboard
+                                             "amount": response.total_price*100,// Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                             //"amount": 1*100,//response.total_price * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                             "currency": "INR",
+                                             "name": "Nest cart",
+                                             "description": "Thank you for buying with us",
+                                             "image": "https://example.com/your_logo",
+                                             //"order_id": "order_IluGWxBm9U8zJ8", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                                             "handler": function (responseb){
+                                              // alert(responseb.razorpay_payment_id);
+                                                 data = {
+                                                   
+                                                   "payment_method" : "razorpay",
+                                                   "payment_id" : responseb.razorpay_payment_id,
+                                                   "address": selectedAddress,
+                                                   csrfmiddlewaretoken: token
+                                                   
+                                                 }
+                      
+                                                   $.ajax({
+                                                     method:"POST",
+                                                     url:"{% url 'placeorder' %}",
+                                                     data: data,
+                                                     success: function (responsec) {
+                                                       
+                                                       Swal.fire("Congratulations!", responsec.status,"success" ).then((value) => {
+                                                          
+                                                       });
+                                                       window.location.href = '/'
+                                                     }
+                               
+                                                 });
+                                             },
+                                             "prefill": {
+                                                 "name": fname,
+                                                 "email" : email,
+                                                 'contact' : phone,
+                                             },
+                                             
+                                             "theme": {
+                                                 "color": "#3399cc"
+                                             }
+                                         };
+                                         var rzp1 = new Razorpay(options);
+                                         rzp1.on('payment.failed', function (response){
+                                                 alert(response.error.code);
+                                                 alert(response.error.description);
+                                                 alert(response.error.source);
+                                                 alert(response.error.step);
+                                                 alert(response.error.reason);
+                                                 alert(response.error.metadata.order_id);
+                                                 alert(response.error.metadata.payment_id);
+                                         });
+                                         rzp1.open();
+                                           console.log(responsec);
+                               
+                                          }
+                                       });
+                                    } 
+                                }
+                            });
+                        });
+                    </script>
+                 
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}
+

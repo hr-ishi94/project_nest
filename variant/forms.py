@@ -5,3 +5,7 @@ class ImageForm(forms.ModelForm):
     class Meta:
         model = VariantImage
         fields = ('image',)
+
+        
+        
+        

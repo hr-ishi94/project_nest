@@ -22,7 +22,7 @@
         <aside class="navbar-aside" id="offcanvas_aside">
             <div class="aside-top">
                 <a href="index.html" class="brand-wrap">
-                    <img src="{% static 'assets-admin/imgs/theme/logo.svg' %}" class="logo" alt="Nest Dashboard" />
+                    <img src="{% static 'assets-admin/imgs/theme/logo.jpg' %}" class="logo" alt="Nest Dashboard" />
                 </a>
                 <div>
                     <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i></button>
@@ -80,7 +80,7 @@
                         
                     </li>
                     <li class="menu-item">
-                        <a class="menu-link" href="page-orders-1.html">
+                        <a class="menu-link" href="{%url 'order_list'%}">
                             <i class="icon material-icons md-shopping_cart"></i>
                             <span class="text">Orders</span>
                         </a>
@@ -95,7 +95,7 @@
                        
                     </li>
                     <li class="menu-item">
-                        <a class="menu-link" href="page-reviews.html">
+                        <a class="menu-link" href="{%url 'admin_review'%}">
                             <i class="icon material-icons md-comment"></i>
                             <span class="text">Reviews</span>
                         </a>
@@ -141,12 +141,7 @@
                             <input list="search_terms" type="text" class="form-control" placeholder="Search term" />
                             <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
                         </div>
-                        <datalist id="search_terms">
-                            <option value="Products"></option>
-                            <option value="New orders"></option>
-                            <option value="Apple iphone"></option>
-                            <option value="Ahmed Hassan"></option>
-                        </datalist>
+                        
                     </form>
                 </div>
                 <div class="col-nav">

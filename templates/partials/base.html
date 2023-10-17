@@ -183,11 +183,11 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                        <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.jpg' %}" alt="logo" /></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
-                            <form action="#">
+                            <form action="{%url 'search_view'%}">
                                 <select class="select-active">
                                     <option>All Categories</option>
                                     <option>Milks and Dairies</option>
@@ -201,7 +201,7 @@
                                     <option>Noodles & Rice</option>
                                     <option>Ice cream</option>
                                 </select>
-                                <input type="text" placeholder="Search for items..." />
+                                <input type="text"name='query' placeholder="Search for items..." />
                             </form>
                         </div>
                         <div class="header-action-right">
@@ -236,14 +236,22 @@
                                 <div class="header-action-icon-2">
                                     <a href="{%url 'wish_list'%}">
                                         <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}" />
-                                        <span class="pro-count blue">6</span>
+                                        {%if wishlist_count%}
+                                        <span class="pro-count blue">{{wishlist_count}}</span>
+                                        {%else%}
+                                        <span class="pro-count blue">0</span>
+                                        {%endif %}
                                     </a>
                                     <a href="{%url 'wish_list'%}"><span class="lable">Wishlist</span></a>
                                 </div>
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="{%url 'cart'%}">
                                         <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
-                                        <span class="pro-count blue">2</span>
+                                        {%if cart_count%}
+                                        <span class="pro-count blue">{{cart_count}}</span>
+                                        {%else%}
+                                        <span class="pro-count blue">0</span>
+                                        {%endif%}
                                     </a>
                                     <a href="{%url 'cart'%}"><span class="lable">Cart</span></a>
                                     
@@ -274,15 +282,18 @@
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href=""><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                        <a href=""><img src="{% static 'assets/imgs/theme/logo.jpg' %}" alt="logo" /></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
                         <div class="main-categori-wrap d-none d-lg-block">
-                            <a class="categories-button-active" href="#">
-                                <span class="fi-rs-apps"></span> <span class="et">Browse</span> All Categories
-                                <i class="fi-rs-angle-down"></i>
-                            </a>
-                            <div class="categories-dropdown-wrap categories-dropdown-active-large font-heading">
+                            <div>
+
+                                <a class="button btn-md" href="{%url 'category_view'%}">
+                                    <span class="fi-rs-apps"></span> <span class="et">Browse</span> All Categories
+                                    
+                                </a>
+                            </div>
+                            {% comment %} <div class="categories-dropdown-wrap categories-dropdown-active-large font-heading">
                                 <div class="d-flex categori-dropdown-inner">
                                     <ul>
                                         <li>
@@ -340,7 +351,7 @@
                                     </div>
                                 </div>
                                 <div class="more_categories"><span class="icon"></span> <span class="heading-sm-1">Show more...</span></div>
-                            </div>
+                            </div> {% endcomment %}
                         </div>
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
                             <nav>
@@ -353,38 +364,15 @@
                                         <a href="page-about.html">About</a>
                                     </li>
                                     <li>
-                                        <a href="shop-grid-right.html">Shop <i class="fi-rs-angle-down"></i></a>
+                                        <a href="shop-grid-right.html">Category<i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
-                                            <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
-                                            <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>
-                                            <li><a href="shop-list-right.html">Shop List – Right Sidebar</a></li>
-                                            <li><a href="shop-list-left.html">Shop List – Left Sidebar</a></li>
-                                            <li><a href="shop-fullwidth.html">Shop - Wide</a></li>
-                                            <li>
-                                                <a href="#">Single Product <i class="fi-rs-angle-right"></i></a>
-                                                <ul class="level-menu">
-                                                    <li><a href="shop-product-right.html">Product – Right Sidebar</a></li>
-                                                    <li><a href="shop-product-left.html">Product – Left Sidebar</a></li>
-                                                    <li><a href="shop-product-full.html">Product – No sidebar</a></li>
-                                                    <li><a href="shop-product-vendor.html">Product – Vendor Infor</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="shop-filter.html">Shop – Filter</a></li>
-                                            <li><a href="shop-wishlist.html">Shop – Wishlist</a></li>
-                                            <li><a href="shop-cart.html">Shop – Cart</a></li>
-                                            <li><a href="shop-checkout.html">Shop – Checkout</a></li>
-                                            <li><a href="shop-compare.html">Shop – Compare</a></li>
-                                            <li>
-                                                <a href="#">Shop Invoice<i class="fi-rs-angle-right"></i></a>
-                                                <ul class="level-menu">
-                                                    <li><a href="shop-invoice-1.html">Shop Invoice 1</a></li>
-                                                    <li><a href="shop-invoice-2.html">Shop Invoice 2</a></li>
-                                                    <li><a href="shop-invoice-3.html">Shop Invoice 3</a></li>
-                                                    <li><a href="shop-invoice-4.html">Shop Invoice 4</a></li>
-                                                    <li><a href="shop-invoice-5.html">Shop Invoice 5</a></li>
-                                                    <li><a href="shop-invoice-6.html">Shop Invoice 6</a></li>
-                                                </ul>
-                                            </li>
+                                            {%for c in categories%}
+                                            <li><a href="{% url 'category_product_view' c_id=c.id %}">{{c.categories}}</a></li>
+                                            
+                                            
+                                            {%endfor%}
+                                            <hr>
+                                            <li><a href="{%url 'category_view'%}">All categories</a></li>
                                         </ul>
                                     </li>
                                     <li>
@@ -572,7 +560,7 @@
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
                 <div class="mobile-header-logo">
-                    <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                    <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.jpg' %}" alt="logo" /></a>
                 </div>
                 <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
                     <button class="close-style search-close">
@@ -862,7 +850,7 @@
                     <div class="col">
                         <div class="widget-about font-md mb-md-3 mb-lg-3 mb-xl-0">
                             <div class="logo mb-30">
-                                <a href="index.html" class="mb-15"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                                <a href="index.html" class="mb-15"><img src="{% static 'assets/imgs/theme/logo.jpg' %}" alt="logo" /></a>
                                 <p class="font-lg text-heading">Awesome grocery store website template</p>
                             </div>
                             <ul class="contact-infor">

@@ -66,7 +66,12 @@ INSTALLED_APPS = [
     'offer',
     'userprofile',
     'wishlist',
-    'cart'
+    'cart',
+    'mathfilters',
+    'checkout',
+    'coupon',
+    'order',
+    
     
     
 ]
@@ -90,6 +95,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'core.context_processor.default',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -168,3 +174,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # manually added
 
 AUTH_USER_MODEL ="user.CustomUser"
+
+#Razorpay integration
+
+RAZOR_KEY='rzp_test_UxAf0X95pA9IRt'
+RAZOR_SECRET_KEY='MGPTnMpIfIFWdF2sYC3sMmjY'
+

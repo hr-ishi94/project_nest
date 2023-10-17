@@ -27,7 +27,7 @@
                 <h1 class="heading-2 mb-10">Your Cart</h1>
                 <div class="d-flex justify-content-between">
                     
-                    <h6 class="text-body"><a href="#" class="text-muted"><i class="fi-rs-trash mr-5"></i>Clear Cart</a></h6>
+                    <h6 class="text-body"><a href="{%url 'clear_cart'%}" class="text-muted"><i class="fi-rs-trash mr-5"></i>Clear Cart</a></h6>
                 </div>
             </div>
         </div>
@@ -63,9 +63,9 @@
                                                 </a>
                                             </figure>
 
-                                            <h3 class="product-title">
+                                            <h5 class="product-title">
                                                 <a href="{% url 'product_show' i.variant.product.id i.variant.id %}">{{i.variant.product.product_name}}</a>
-                                            </h3><!-- End .product-title -->
+                                            </h5><!-- End .product-title -->
                                         </div><!-- End .product -->
                                     </td>
                                     <td class="price-col">{{i.variant.color.color_name}}</td>
@@ -81,12 +81,13 @@
                                     <td class="quantity-col product_data">
                                         <div class="input-group quantity mx-auto " style="width: 100px;">
                                             <div class="input-group-btn changeQuantity " data-variantid="{{i.id}}">
-                                                <div class="product-details-quantity">
-                                                    <input readonly class="mtext-104 cl3 txt-center num-product"
-                                                        type="number" min="1" max="5" name="num-product"
-                                                        value="{{i.product_qty}}" id="pro_qty{{i.id}}">
-
-                                                </div><!-- End .product-details-quantity -->
+                                                
+                                                <div class="detail-qty border radius">
+                                                    
+                                                    <input type="number" id="pro_qty{{i.id}}" name="quantity" class="qty-val" value="{{i.product_qty}}" min="1" max="5"  name="num-product">
+                                                    
+                                                </div>
+                                                <!-- End .product-details-quantity -->
 
                                             </div>
                                         </div>
@@ -107,7 +108,7 @@
 
 
                                     <td class="action text-center" data-title="Remove">
-                                        <a href="{% url 'remove_wish_list' i.id %}"><button type="button" class="btn-close" aria-label="Close"></button>
+                                        <a href="{% url 'remove_cart' i.id %}"><button type="button" class="btn-close" aria-label="Close"></button>
                                         </a>
                                     </td>
                                 </tr>
@@ -120,7 +121,7 @@
                 <div class="divider-2 mb-30"></div>
                 <div class="cart-action d-flex justify-content-between">
                     <a class="btn "><i class="fi-rs-arrow-left mr-10"></i>Continue Shopping</a>
-                    <a class="btn  mr-10 mb-sm-15"><i class="fi-rs-refresh mr-10"></i>Update Cart</a>
+                    <a  href="{%url 'cart'%}" class="btn  mr-10 mb-sm-15"><i class="fi-rs-refresh mr-10"></i>Update Cart</a>
                 </div>
                 
             </div>
@@ -168,7 +169,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <a href="#" class="btn mb-20 w-100">Proceed To CheckOut<i class="fi-rs-sign-out ml-15"></i></a>
+                    <a href="{%url 'checkout'%}" class="btn mb-20 w-100">Proceed To CheckOut<i class="fi-rs-sign-out ml-15"></i></a>
                 </div>
             </div>
         </div>
@@ -183,7 +184,7 @@
         console.log(product_qty, variant_id, '22222222222222222')
         $.ajax({
             method: "POST",
-            url: "",
+            url: "{%url 'update_cart' %}",
             data: {
                 'cart_id': variant_id,
                 'product_qty': product_qty,
@@ -237,7 +238,7 @@
                 <h1 class="heading-2 mb-10">Your Cart</h1>
                 <div class="d-flex justify-content-between">
                     
-                    <h6 class="text-body"><a href="#" class="text-muted"><i class="fi-rs-trash mr-5"></i>Clear Cart</a></h6>
+                    <h6 class="text-body"><a href="{%url 'clear_cart'%}" class="text-muted"><i class="fi-rs-trash mr-5"></i>Clear Cart</a></h6>
                 </div>
             </div>
         </div>
@@ -250,7 +251,8 @@
                                 <th class="custome-checkbox start pl-30">
                                     id
                                 </th>
-                                <th scope="col" colspan="2">Product</th>                                <th scope="col"> Price</th>
+                                <th scope="col" colspan="2">Product</th>                                
+                                <th scope="col"> Price</th>
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Total</th>
                                 <th scope="col" class="end">Remove</th>

@@ -1,9 +1,9 @@
-{%extends 'partials/base1.html'%}
-{%load static%}
+<!DOCTYPE html>
+<html lang="en">
 
+{% load static %}
 
-{%block content%}
-
+  <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -25,58 +25,22 @@
     <script src="{% static 'crop/main.js' %}" defer></script>
 
 
+    <title>image cropper</title>
+  </head>
+  <body>
     
-  <div>
-
-    <section>
-      <h3><title>image cropper</title></h3>
-      <div class="container mt-3">
-        <div id="alert-box"></div>
-        <div id="image-box" class="mb-3"></div>
-        <form action="{% url 'image_view' img_id %}" method="post" id="image-form">
+    <div class="container mt-3">
+      <div id="alert-box"></div>
+      <div id="image-box" class="mb-3"></div>
+      <form action="{% url 'image_view' img_id %}"  method="post" id="image-form">
+        <input type="hidden" id="img_id" value="{{img_id}}">
           {% csrf_token %}
-          <input type="hidden" id="img_id" value="{{img_id}}">
           {{form.as_p}}
-          <button type="submit" class="btn btn-primary mt-3">confirm</button>
-        </form>
-      </div>
-    </section>
+      </form>
+      <button type="submit" class="btn btn-primary mt-3 not-visible" id="confirm-btn">confirm</button>
+    </div>
     
-  </div>
-  <br>
-  <br>
-  <br>
+  </body>
 
 
-<!-- Include jQuery library -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Your JavaScript code -->
-<script>
-  $(document).ready(function() {
-    $("#image-form").submit(function(e) {
-      e.preventDefault(); // Prevent the default form submission
-      
-      // Your additional JavaScript logic here, if needed
-
-      // Submit the form via AJAX, for example
-      $.ajax({
-        url: $(this).attr('action'),
-        type: $(this).attr('method'),
-        data: new FormData(this),
-        processData: false,
-        contentType: false,
-        success: function(data) {
-          // Handle the response from the server
-          console.log(data);
-        },
-        error: function(error) {
-          // Handle any errors
-          console.error(error);
-        }
-      });
-    });
-  });
-</script>
-
-{%endblock content%}
+  </html>

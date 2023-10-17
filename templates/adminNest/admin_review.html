@@ -1,0 +1,110 @@
+{% extends "partials/base1.html" %}
+{% load static %}
+
+{% block content %}
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Reviews</h2>
+            <p>User reviews on Nest website.</p>
+        </div>
+        
+    </div>
+    <div class="card mb-4">
+        
+        <!-- card-header end// -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                           
+                            <th>#ID</th>
+                            <th>Product</th>
+                            <th>Name</th>
+                            <th>Rating</th>
+                            <th>Email</th>
+                            <th>User Review</th>
+                            {% comment %} <th class="text-end">Action</th> {% endcomment %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for r in reviews%}
+                        <tr>
+                            
+                            <td>{{r.id}}</td>
+                            <td><b>{{r.product}}</b></td>
+                            <td>{{r.name}}</td>
+                            <td>
+                                <ul class="rating-stars">
+                                    {%if r.rating == 5%}
+                                    <li style="width: 100%" class="stars-active">
+                                        <img src="{% static 'assets-admin/imgs/icons/stars-active.svg' %}" alt="stars" />
+                                    </li>
+                                    <li>
+                                        <img src="{% static 'assets-admin/imgs/icons/starts-disable.svg' %}" alt="stars" />
+                                    </li>
+                                    {%elif r.rating == 4%}
+                                    <li style="width: 80%" class="stars-active">
+                                        <img src="{% static 'assets-admin/imgs/icons/stars-active.svg' %}" alt="stars" />
+                                    </li>
+                                    <li>
+                                        <img src="{% static 'assets-admin/imgs/icons/starts-disable.svg' %}" alt="stars" />
+                                    </li>
+                                    {%elif r.rating == 3%}
+                                    <li style="width: 60%" class="stars-active">
+                                        <img src="{% static 'assets-admin/imgs/icons/stars-active.svg' %}" alt="stars" />
+                                    </li>
+                                    <li>
+                                        <img src="{% static 'assets-admin/imgs/icons/starts-disable.svg' %}" alt="stars" />
+                                    </li>
+                                    {%elif r.rating == 2%}
+                                    <li style="width: 40%" class="stars-active">
+                                        <img src="{% static 'assets-admin/imgs/icons/stars-active.svg' %}" alt="stars" />
+                                    </li>
+                                    <li>
+                                        <img src="{% static 'assets-admin/imgs/icons/starts-disable.svg' %}" alt="stars" />
+                                    </li>
+                                    {%elif r.rating == 1%}
+                                    <li style="width: 20%" class="stars-active">
+                                        <img src="{% static 'assets-admin/imgs/icons/stars-active.svg' %}" alt="stars" />
+                                    </li>
+                                    <li>
+                                        <img src="{% static 'assets-admin/imgs/icons/starts-disable.svg' %}" alt="stars" />
+                                    </li>
+                                    {%endif%}
+
+                                </ul>
+                                
+                            </td>
+                            <td>{{r.email}}</td>
+                            <td>{{r.review_text}}</td>
+
+                            
+                        </tr>
+                        {%endfor%}
+                        
+                    </tbody>
+                </table>
+            </div>
+            <!-- table-responsive//end -->
+        </div>
+        <!-- card-body end// -->
+    </div>
+    {% comment %} <div class="pagination-area mt-30 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                <li class="page-item"><a class="page-link" href="#">02</a></li>
+                <li class="page-item"><a class="page-link" href="#">03</a></li>
+                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">16</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div> {% endcomment %}
+</section>
+
+{% endblock content %}
