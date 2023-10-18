@@ -374,7 +374,7 @@
                                                                 <div class="tab-content" id="tab-content-5">
                                                                     <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
                                                                     
-                                                                        <form action="{% url 'add_review' %}" method="POST" id="review-form"  class="refa">
+                                                                        <form action="" method="POST" id="review-form"  class="refa">
                                                                             {% csrf_token %}
                                                                             <input type="hidden" class="form-control" value="{{ i.variant.id }}" name="img_id" required>
                                                                             <input type="hidden" class="form-control" value="{{ i.variant.product.id }}" name="product_id" required>
