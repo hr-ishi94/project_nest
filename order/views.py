@@ -10,8 +10,9 @@ from .models import Order_Cancelled
 
 def order_list(request):
     orders=Order.objects.all().order_by('id')
+    wallet= Wallet.objects.filter(user=request.user)
 
-    return render(request,'adminNest/order.html',{'orders':orders})
+    return render(request,'adminNest/order.html',{'orders':orders,'wallet':wallet})
 
 
 

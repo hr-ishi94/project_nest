@@ -117,8 +117,10 @@
                                     <td>{{order.created_at}}</td>
                                     <td>{{order.total_price}}</td>
                                     <td>{{order.payment_mode}}</td>
-                                    <td><a href="{%url 'order_view_user' order.id %}" class="btn-small d-block">View</a></td>
-                                    <td>Pending</td>
+                                    <td><strong><a href="{%url 'order_view_user' order.id %}" class="btn-small d-block">View</a></td></strong>
+                                    <td><strong>{{order.order_status}}</strong></td>
+
+                                    
                                 </tr>
                                 {%endfor%}
                                 
@@ -131,15 +133,16 @@
         <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="mb-0">Orders tracking</h3>
+                    <h3 class="mb-0">Wallet</h3>
                 </div>
                 <div class="card-body contact-from-area">
                     <p>To track your order please enter your OrderID in the box below and press "Track" button. This was given to you on your receipt and in the confirmation email you should have received.</p>
                     <div class="row">
                         <div class="col-lg-8">
+                            
                             <form class="contact-form-style mt-30 mb-50" action="#" method="post">
                                 <div class="input-style mb-20">
-                                    <label>Order ID</label>
+                                    <label>{{wallet.wallet}}ds</label>
                                     <input name="order-id" placeholder="Found in your order confirmation email" type="text" />
                                 </div>
                                 <div class="input-style mb-20">

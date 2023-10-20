@@ -29,10 +29,10 @@ def userprofile(request):
     wishlist_count =Wishlist.objects.filter(user=request.user).count()
     order =Order.objects.filter(user=request.user) 
     last_order=Order.objects.filter(user=request.user).last()
-    # try:
-        # wallet =Wallet.objects.get(user=request.user)
-    # except:
-    #    wallet=0   
+    try:
+        wallet =Wallet.objects.get(user=request.user)
+    except:
+       wallet=0   
 
     context={
         'user1':user,
@@ -40,7 +40,7 @@ def userprofile(request):
         'wishlist_count':wishlist_count, 
         'cart_count':cart_count,
         'order':order,
-        # 'wallet' :wallet,
+        'wallet' :wallet,
         'last_order': last_order,
         
             

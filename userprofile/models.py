@@ -21,3 +21,6 @@ class Address(models.Model):
 class Wallet(models.Model):
     user= models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     wallet= models.PositiveBigIntegerField(null=True)
+
+    def __str__(self):
+        return f"{self.user}"

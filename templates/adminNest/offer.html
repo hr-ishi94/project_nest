@@ -1,0 +1,177 @@
+{% extends "partials/base1.html" %}
+{% load static %}
+
+{% block content %}
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Offers </h2>
+            
+            
+        </div>
+        <div>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#addCategory">
+                <button type="submit" class="btn btn-primary"> Add offer</button>
+
+            </a>
+                
+
+        </div> 
+    </div>
+    <div class="card mb-4">
+        
+        <!-- card-header end// -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                           
+                            <th>#ID</th>
+                            <th>Offer name</th>
+                            <th>Discount</th>
+                            <th>Start date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for offer in offer%}
+                        <tr>
+                            
+                            <td>{{offer.id}}</td>
+                            <td><b>{{offer.offer_name}}</b></td>
+                            <td>{{offer.discount_amount}}</td>
+                            <td>{{offer.start_date}}</td>
+                               
+                            
+                            <td>{{offer.end_date}}</td>
+                            {%if offer.is_available %}
+                            <td><span class="badge rounded-pill alert-success">Active</span></td>
+                            {%else%}
+                            <span class="badge rounded-pill alert-warning">Expired</span>
+                            {%endif%}
+                            <td class="text-end">
+                                <button type="button" class="btn btn-md bg-warning rounded font-sm"
+                                    
+                                    data-bs-toggle="modal" data-bs-target="#confirmEdit{{forloop.counter}}"><i
+                                        class="ti ti-edit"></i>
+                                    Edit
+                                </button>
+                                <a href="{%url 'delete_offer' offer.id %}" class="btn btn-md bg-danger rounded font-sm">Delete</a>
+                                
+                                <!-- dropdown //end -->
+                            </td>
+                        </tr>
+                        <div class="modal fade" id="confirmEdit{{forloop.counter}}" tabindex="-1"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title fs-5" id="exampleModalLabel">Edit offer</h3>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" action="{% url 'edit_offer' offer.id %}"
+                                        enctype="multipart/form-data">
+                                        {% csrf_token %}
+
+
+                                        <div class="form-outline mb-4">
+                                            <input name="offername" value="{{offer.offer_name}}" type="text" id="form3Example3cg"
+                                              class="form-control form-control-lg" required />
+                                            <label class="form-label" for="form3Example3cg">Offer name</label>
+                                          </div>
+                  
+                                          <div class="form-outline mb-4">
+                                            <input name="discount" value="{{offer.discount_amount}}" type="number" id="form3Example3cg"
+                                              class="form-control form-control-lg" required />
+                                            <label class="form-label" for="form3Example3cg">Discount</label>
+                                          </div>
+                                          <div class="form-outline mb-4">
+                                            <input type="date" id="start-date" name="start_date" value="{{ offer.start_date|date:'Y-m-d' }}" class="form-control form-control-lg" >
+
+
+                                            <label class="form-label" for="start-date">Start date</label>
+                                        </div>
+                                        <div class="form-outline mb-4">
+                                            <input type="date" id="end-date" name="end_date" value="{{ offer.end_date|date:'Y-m-d' }}" class="form-control form-control-lg" >
+                                            <label class="form-label" for="end-date">End date</label>
+                                        </div>
+                                        
+                                        
+                                          <div class="d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light"
+                                              type="submit">Save Changes</button>
+                                          </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        {%endfor%}
+                       
+                       
+                    </tbody>
+                </table>
+            </div>
+            <!-- table-responsive//end -->
+        </div>
+        <!-- card-body end// -->
+    </div>
+    
+<div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Offer</h1>
+                <br>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form action="{%url 'add_new_offer' %}" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    <div style="width: 100px;" class="">
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Offer name</label>
+                        <input name="offername" value="{{offer.offer_name}}" type="text" id="form3Example3cg"
+                          class="form-control form-control-lg" required />
+                      </div>
+
+                      <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Discount</label>
+                        <input name="discount" value="{{offer.discount_amount}}" type="number" id="form3Example3cg"
+                          class="form-control form-control-lg" required />
+                      </div>
+                      <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Start date</label>
+                        <input type="date" id="start-date" name="start_date" value="{{offer.start_date}}"
+                          id="form3Example3cg" class="form-control form-control-lg" required>
+                      </div>
+                      <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">End date</label>
+                        <input type="date" id="end-date" name="end_date" value="{{offer.end_date}}" id="form3Example3cg"
+                          class="form-control form-control-lg" required>
+                      </div>
+
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn btn-md text-center text-light"
+                            type="submit">Save </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+    
+</section>
+<!-- Include jQuery library -->
+
+{% endblock content %}
