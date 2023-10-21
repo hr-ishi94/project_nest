@@ -83,7 +83,7 @@ def edit_offer(request,edit_id):
         if discount.strip() == '':
             messages.error(request, "Cannot blank Offer field")
             return redirect('offer')
-        if Offer.objects.filter(offer_name=offername ,is_available=True).exclude(id=offer_id).exists():
+        if Offer.objects.filter(offer_name=offername ,is_available=True).exclude(id=edit_id).exists():
             messages.error(request, 'Offer name already exists')
             return redirect('offer')
         try:
