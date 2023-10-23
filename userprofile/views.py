@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from user.models import CustomUser
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Address
+from .models import Address,Wallet
 from cart.models import Cart
 from wishlist.models import Wishlist
 from checkout.models import Order,OrderItem,Itemstatus

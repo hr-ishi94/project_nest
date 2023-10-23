@@ -7,15 +7,19 @@ from django.contrib import messages
 from django.db.models import Q
 from userprofile.models import Wallet
 from .models import Order_Cancelled
+from django.contrib.auth.decorators import login_required
 
+
+
+@login_required(login_url='admin_login1')
 def order_list(request):
-    orders=Order.objects.all().order_by('id')
+    orders=Order.objects.all().order_by('-created_at')
     wallet= Wallet.objects.filter(user=request.user)
 
     return render(request,'adminNest/order.html',{'orders':orders,'wallet':wallet})
 
 
-
+@login_required(login_url='admin_login1')
 def order_view(request, view_id):
     
     try:
@@ -40,6 +44,7 @@ def order_view(request, view_id):
         print("Address does not exist")
     return redirect('order_list')
 
+@login_required(login_url='admin_login1')
 def order_search(request):
     search = request.POST.get('search')
     if search is None or search.strip() == '':
@@ -55,6 +60,7 @@ def order_search(request):
         return redirect('order_list')
     return render(request,'adminNest/order.html',context)
 
+@login_required(login_url='admin_login1')
 def order_cancel(request,cancel_id):
     
     try:
@@ -159,6 +165,7 @@ def order_cancel(request,cancel_id):
         return redirect('order_view_user',view_id)
     return redirect('userprofile')
 
+@login_required(login_url='admin_login1')
 def order_status_show(request):
     name=request.POST.get('name')
     if name=='Pending':
@@ -184,7 +191,7 @@ def order_status_show(request):
         return redirect('order_list')
    
     
-
+@login_required(login_url='admin_login1')
 def change_status(request):
     
     if not request.user.is_superuser:
@@ -240,6 +247,7 @@ def change_status(request):
     messages.success(request,'status updated!')
     return redirect('order_view',view_id)
 
+@login_required(login_url='admin_login1')
 def order_payment_sort(request):
     name=request.POST.get('name')
     if name=='cod':

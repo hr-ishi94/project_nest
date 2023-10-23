@@ -1,6 +1,6 @@
 {%extends 'partials/base1.html'%}
 {load static}
-{% comment %} {% load mathfilters %} {% endcomment %}
+{% load mathfilters %}
 
 
 {% block content%}
@@ -78,12 +78,12 @@
                             <td style="text-align: center;"><b>{{user.id}}</td>
                             <td><b>{{ user.product_name }}</td>
                             <td><b>{{ user.category.categories}}</td>
-                                {% comment %} {% if user.offer %}
-                            <td > <span style="color:red;"><del><b>${{ user.product_price }} </del></span><span style="color:white;">-</span> <span style="color:green;">
-                                <b>${{ user.product_price|sub:user.offer.discount_amount }}</span></td> 
-                                {% else %} {% endcomment %}
-                            <td ><b>{{ user.product_price }}</td> 
-                                {% comment %} {% endif %} {% endcomment %}
+                                {% if user.offer %}
+                            <td > <span style="color:red;"><del><b>₹{{ user.product_price }} </del></span><span style="color:white;">-</span> <span style="color:green;">
+                                <b>₹{{ user.product_price|sub:user.offer.discount_amount }}</span></td> 
+                                {% else %} 
+                            <td ><span style="color:green;"><b>₹{{ user.product_price }}</b></span> </td> 
+                                 {% endif %} 
                                 {% if user.offer %}
                                 <td ><b>{{ user.offer.offer_name}}</td>
                                 {% else %}    
@@ -147,25 +147,25 @@
                                                      </select>
                                                  </div>
                                                  <div class="form-outline mb-4">
-                                                     <label class="form-label" for="form3Example3cg">Offer</label>
-                                                     <select class="form-select" name="offer">
-                                                         {% comment %} {% if user.offer %}
-                                                         {% for c in offer %}
-                                                             {% if c.offer_name == user.offer.offer_name %}
-                                                                 <option value="{{ c.id }}" selected></option>
-                                                             {% else %}
-                                                                 <option value="{{ c.id }}"></option>
-                                                                 <option value="">No offer</option>
-                                                             {% endif %}
-                                                         {% endfor %}
-                                                         {% else %}
-                                                         <option value="">No offer</option>
-                                                         {% for c in offer %}
-                                                         <option value="{{ c.id }}"></option>
-                                                         {% endfor %}
-                                                         {% endif %} {% endcomment %}
-                                                     </select>
-                                                 </div>
+                                                    <label class="form-label" for="form3Example3cg">offer</label>
+                                                    <select class="form-select" name="offer">
+                                                        {% if user.offer %}
+                                                        {% for c in offer %}
+                                                            {% if c.offer_name == user.offer.offer_name %}
+                                                                <option value="{{ c.id }}" selected>{{ c.offer_name }}</option>    
+                                                            {% else %}
+                                                                <option value="{{ c.id }}">{{ c.offer_name }}</option>
+                                                                <option value="">No offer</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% else %}
+                                                        <option value="">No offer</option>
+                                                        {% for c in offer %}
+                                                        <option value="{{ c.id }}">{{ c.offer_name }}</option>
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                    </select>
+                                                </div>
                                                  <div class="form-outline mb-4">
                                                      <label class="form-label" for="form3Example3cg">Description</label>
                                                      <input name='product_description' value="{{user.product_description}}" type="text"

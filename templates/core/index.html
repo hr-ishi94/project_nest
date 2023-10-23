@@ -1,6 +1,6 @@
 {%extends 'partials/base.html'%}
 {%load static%}
-
+{% load mathfilters %}
 {%block content%}
 
 
@@ -91,7 +91,7 @@
                                                 
                                             </div>
                                             <div class="product-badges product-badges-position product-badges-mrg">
-                                                <span class="hot">Hot</span>
+                                                <span class="hot">{{c.variant.product.offer.discount_amount|div:c.variant.product.product_price|mul:100|floatformat:0}}% OFF</span>
                                             </div>
                                         </div>
                                         <div class="product-content-wrap">
@@ -108,8 +108,8 @@
                                            
                                             <div class="product-card-bottom">
                                                 <div class="product-price">
-                                                    <span>₹{{c.variant.product.product_price}}</span>
-                                                    <span class="old-price">₹3288</span>
+                                                    <span>₹{{c.variant.product.product_price|sub:c.variant.product.offer.discount_amount}}</span>
+                                                    <span class="old-price">₹{{c.variant.product.product_price}}</span>
                                                 </div>
                                                 <div class="add-cart">
                                                     <a class="add"  data-product_id="{{ c.variant.id }}" href=""><i class="fi-rs-shopping-cart mr-5"></i>View </a>

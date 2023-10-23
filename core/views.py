@@ -14,6 +14,7 @@ def index(request):
     
     categories=category.objects.all()
     products=Product.objects.all()
+    
     variant_images=VariantImage.objects.filter(variant__product__is_available=True).order_by('variant__product').distinct('variant__product')
     p=Paginator(VariantImage.objects.filter(variant__product__is_available=True).order_by('variant__product').distinct('variant__product'), 5)
     page=request.GET.get('page')
@@ -46,6 +47,8 @@ def product_show(request,prod_id,img_id):
     average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
     # rev_count=ProductReview.objects.filter(product=prod_id).count()
     # count_rev=ProductReview
+    product=Product.objects.get(id=prod_id)
+    disc=round((product.offer.discount_amount/product.product_price)*100)
     try:
         cart_count =Cart.objects.filter(user =request.user).count()
         wishlist_count =Wishlist.objects.filter(user=request.user).count()
@@ -65,6 +68,7 @@ def product_show(request,prod_id,img_id):
         'cart_count' :cart_count,
         'reviews':reviews,
         'average_rating':average_rating ,
+        'disc':disc
         # 'rev_count':rev_count,
     }
  

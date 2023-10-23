@@ -5,6 +5,6 @@ urlpatterns=[
  
        path('checkout/',views.checkout,name='checkout'),
        path('placeorder/',views.placeorder,name='placeorder'),
-    path('proceedtopay/', views.razarypaycheck, name = 'razarypaycheck'),
+       path('proceedtopay/', views.razarypaycheck, name = 'razarypaycheck'),
 
 ]

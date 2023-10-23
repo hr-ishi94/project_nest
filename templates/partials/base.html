@@ -183,7 +183,7 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.jpg' %}" alt="logo" /></a>
+                        <a href="{%url 'index'%}"><img src="{% static 'assets/imgs/theme/logo.jpg' %}" alt="logo" /></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
@@ -227,11 +227,10 @@
                                     </form>
                                 </div>
                                  <div class="header-action-icon-2">
-                                    <a href="shop-compare.html">
-                                        <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-user.svg' %}" />
-                                        <span class="pro-count blue">+</span>
+                                    <a href="#" >
+                                        <i class="fi-rs-money mr-10"></i>
                                     </a>
-                                    <a href="shop-compare.html"><span class="lable ml-0 text-success">Wallet Balance:{{wallet.wallet}}</span></a>
+                                    <span class="lable ml-0 text-success">Wallet :₹{{total_balance}}</span>
                             </div> 
                                 <div class="header-action-icon-2">
                                     <a href="{%url 'wish_list'%}">
@@ -358,7 +357,7 @@
                                 <ul>
                                     <li class="hot-deals"><img src="{% static 'assets/imgs/theme/icons/icon-hot.svg' %}" alt="hot deals" /><a href="shop-grid-right.html">Deals</a></li>
                                     <li>
-                                        <a class="active" href="index.html">Home </i></a>
+                                        <a class="active" href="{%url 'index' %}">Home </i></a>
                                                                            
                                     <li>
                                         <a href="page-about.html">About</a>

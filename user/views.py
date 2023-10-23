@@ -177,7 +177,7 @@ def user_login1(request):
                 if user.is_active:
                     print('hello')
                     login(request,user)
-                    return render(request,'core/index.html')
+                    return redirect('index')
                 else:
                     messages.warning(request,'Your account has been blocked!' )
                     return redirect('user_login1')  
@@ -247,7 +247,7 @@ def user_loginotp(request):
 @login_required(login_url='user_login1')
 def logout1(request):
     logout(request)
-    return render(request,'core/index.html')
+    return redirect('index')
 
 def forgot_password(request):
     if request.method=='POST':

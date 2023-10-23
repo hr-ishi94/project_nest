@@ -13,6 +13,12 @@
             </div>
         </div>
     </div>
+    <br>
+    <div>
+
+        <a href="{% url 'index'%}"
+                                class="btn btn-outline-primary-2"><span>Continue shopping</span><i class="icon-long-arrow-right"></i></a>
+    </div>
     <div class="container mb-80 mt-50">
         <div class="row">
             <div class="col-lg-8 mb-40">
@@ -33,12 +39,39 @@
                 <div class="row mb-50">
                     
                     <div class="col-lg-6">
-                        <form method="post" class="apply-coupon">
-                            <input type="text" placeholder="Enter Coupon Code...">
-                            <button class="btn  btn-md" name="login">Apply Coupon</button>
+                        <form method="post" class="apply-coupon" action="{% url 'checkout' %}">
+                            {% csrf_token %}
+                            <input type="text" id="coupon-code" class="form-control"  name="coupon"  placeholder="Enter Coupon Code...">
+                            <button class="btn  btn-md" type="submit" name="login">Apply </button>
                         </form>
                     </div>
                 </div>
+                
+                <div class="col-lg-5">               
+                    <h4 class="summary-title text-brand">Available Coupon</h4><!-- End .summary-title -->
+                    <br>
+                    <table class="table table-summary ">
+                        <thead class="text-light bg-secondary">
+                            <th>Coupon name</th>
+                            <th >Coupon code</th>
+                            <th>Min purchase</th>
+                        </thead>
+                        <tbody>
+                            {% for c in coupon_checkout %}
+                            {% if c.is_coupon_expired %}
+                            {% else %}
+                            <tr>
+                                <td>{{ c.coupon_name }}</td>
+                                <td class='text-brand'><strong>{{ c.coupon_code }}</strong></td>
+                                <td>{{ c.min_price }}</td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                                
+                </div>
+                <br>
                 <div class="row">
                     <h4 class="mb-30">Billing Details</h4>
                     <div  >
@@ -117,11 +150,17 @@
                     </form>
                 </div>
             </div>
+            
+           
             <div class="col-lg-5">
                 <div class="border p-40 cart-totals ml-30 mb-50">
                     <div class="d-flex align-items-end justify-content-between mb-30">
                         <h4>Your Order</h4>
-                        <h4 class="text-muted" name='subtotal'>Subtotal:<span class='text-brand'>₹{{grand_total}}<span></h4>
+                        {% if coupon %}   
+                            <h4 class="text-muted" name='subtotal'>Subtotal:<span class='text-brand'>₹{{grand_total|sub:coupon}}<span></h4>       
+                        {% else %}      
+                            <h4 class="text-muted" name='subtotal'>Subtotal:<span class='text-brand'>₹{{grand_total}}<span></h4>
+                        {% endif %}
                     </div>
                     <div class="divider-2 mb-30"></div>
                     <div class="table-responsive order_table checkout">
@@ -144,10 +183,83 @@
                                         <h6 class="text-muted pl-20 pr-20">X {{i.product_qty}}</h6>
                                     </td>
                                     <td>
+                                        {% comment %} <h4 class="text-secondary"><del>₹ {{i.variant.product.product_price|mul:i.product_qty}}</del></h4> {% endcomment %}
                                         <h4 class="text-brand">₹ {{i.variant.product.product_price|mul:i.product_qty}}</h4>
                                     </td>
                                 </tr>
                                {%endfor%}
+                               <tr class="summary-subtotal">
+                                {% if coupon and offer %}
+                                <tr>
+                                    <td><h6>Total:</h6></td>
+                                    <td><h6>₹{{total_price|add:all_offer}}</h6></td>
+                                </tr>
+                                <tr> 
+                                    <td><h6>offer applied:</h6></td>
+                                    <input type="hidden" name="" value="">
+                                    <td><h6>₹{{all_offer}}</h6></td>
+                                </tr>
+                                <tr>
+                                    <td><h6>Subtotal:</h6></td>
+                                    <td><h6>₹{{total_price}}</h6></td>
+                                </tr>
+                               
+                                <tr> 
+                                 <td><h6>coupon applied:</h6></td>
+                                    <input type="hidden" name="couponcheck" value="{{coupon}}">
+                                    <td><h6>₹{{coupon}}</h6></td>
+                                </tr>
+
+
+
+                                {% else %}
+                                    {% if coupon %}
+                                <tr>
+                                    <td><h6>Subtotal:</h6></td>
+                                    <td><h6>₹{{total_price}}</h6></td>
+                                </tr>
+                                <tr> 
+                                    <td><h6>coupon applied:</h6></td>
+                                    <input type="hidden" name="couponcheck" value="{{coupon}}">
+                                    <td><h6>₹{{coupon}}</h6></td>
+                                </tr>
+                                    {% else %}
+                                    <input type="hidden" name="couponcheck" value="{{0}}">
+                                    {% endif %}
+                                    {% if offer %}
+                                    <tr>
+                                        <td><h6>Subtotal:</h6></td>
+                                        <td><h6>₹{{total_price|add:all_offer}}</h6></td>
+                                    </tr>
+                                    <tr> 
+                                        <td><h6>offer applied:</h6></td>
+                                        <input type="hidden" name="" value="">
+                                        <td><h6>₹{{ all_offer }}</h6></td>
+                                    </tr>
+                                    {% else %}
+                                    <input type="hidden" name="" value="">
+                                    {% endif %}
+                                    {% endif %}
+                                    {% if not offer and not coupon %}
+                                    <tr>
+                                        <td><h6>Subtotal:</h6></td>
+                                        <td><h6>₹{{total_price}}</h6></td>
+                                    </tr>
+                                    {% endif %}
+                            </tr><!-- End .summary-subtotal -->
+                            <tr>
+                                <td><h6>Shipping:</h6></td>
+                                <td><h6>Free shipping</h6></td>
+                            </tr>
+                            <tr class="summary-total">
+                                {% if coupon %}
+                                <td><h5>Total:</h5></td>
+                                <td><h5>₹{{ grand_total|sub:coupon }}</h5></td>
+                                {% else %}
+                                <td><h5>Total:</h5></td>
+                                <td><h5>₹{{grand_total}}</h5></td>
+                                {% endif %}
+                            </tr>
                             </tbody>
                         </table>
                     </div>
