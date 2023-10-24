@@ -1,4 +1,5 @@
-from django.shortcuts import render,redirect
+from itertools import groupby
+from django.shortcuts import render,redirect,HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
@@ -7,8 +8,11 @@ from django.db.models import Q
 from products.models import ProductReview
 
 from checkout.models import OrderItem,Order
-from django.db.models import Sum
+from django.db.models import Sum,Prefetch
 from datetime import datetime,date
+import csv
+from fpdf import FPDF
+
 
 def admin_login1(request):
     if request.method=='POST':
@@ -44,54 +48,68 @@ def admin_login1(request):
 def dashboard(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
-    sales_data=OrderItem.objects.values('order__created_at__date').annotate(total_sales=Sum('price')).order_by('-order__created_at__date')
-    categories=[item['order__created_at__date'].strftime('%d/%m') for item in sales_data]
-    sales_values=[item['total_sales'] for item in sales_data]
-    orders=Order.objects.order_by('-created_at')[:10]
-
+    
+    sales_data = OrderItem.objects.values('order__created_at__date').annotate(total_sales=Sum('price')).order_by('-order__created_at__date')
+    # Prepare data for the chart
+    categories = [item['order__created_at__date'].strftime('%d/%m') for item in sales_data]
+    sales_values = [item['total_sales'] for item in sales_data]
+    
+   
+    return_data = OrderItem.objects.filter(orderitem_status__item_status__in=["Return", "Cancelled"]).values('order__created_at__date').annotate(total_returns=Sum('price')).order_by('-order__created_at__date')
+    return_values = [item['total_returns'] for item in return_data]
+    orders =Order.objects.order_by('-created_at')[:10]
     try:
         totalsale=0
-        total_sales=Order.objects.all()
+        total_sales =Order.objects.all()
         for i in total_sales:
             i.total_price
-            totalearnings+=i.total_price
+            totalsale+=i.total_price
     except:
-        totalsale=0
-    
+         totalsale=0 
     try:
         totalearnings=0
-        total_earn=Order.objects.filter(order_status__id=4)
+        total_earn =Order.objects.filter(order_status__id=4)
         for i in total_earn:
             i.total_price
             totalearnings+=i.total_price
     except:
-        totalearnings=0
-
+         totalearnings=0       
+        
     try:
-        status_delivery=Order.objects.filter(order_status__id=4).count()
-        status_cancel=Order.objects.filter(order_status__id=5).count()
-        Total=status_delivery +status_cancel
-        status_delivery=(status_delivery/Total)*100
-        status_cancel=(status_cancel/Total)*100
+        status_pending_count=Order.objects.filter(order_status__id=1).count()
+        status_delivery_count=Order.objects.filter(order_status__id=4).count()
+        status_cancel_count =Order.objects.filter(order_status__id=5).count()
+        status_return_count =Order.objects.filter(order_status__id=6).count()
+        Total = status_delivery_count + status_cancel_count + status_return_count
+        status_delivery = (status_delivery_count / Total) * 100
+        status_cancel = (status_cancel_count / Total) * 100
+        status_return = (status_return_count / Total) * 100
     except:
+        # status_pending_count=0
+        # status_delivery_count=0
+        # status_cancel_count=0
+        # status_return_count=0
         status_delivery=0
         status_cancel=0
+        status_return=0
+        
+            
+    context = {
+        'delivery_count':status_delivery_count,
+        'cancel_count':status_cancel_count,
+        'pending_count':status_pending_count,
 
-
-    
-    context={
         'totalsale':totalsale,
         'totalearnings':totalearnings,
         'status_delivery':status_delivery,
         'status_cancel':status_cancel,
+        'status_return':status_return,
         'orders':orders,
-        'categories':categories,
-        'sales_values':sales_values,
-        
-
+        'categories': categories,
+        'sales_values': sales_values,
+        'return_values': return_values,
     }
-
-
+    
     return render(request,'adminNest/dashboard.html',context)
 
 @login_required(login_url='admin_login1')
@@ -205,6 +223,87 @@ def sales_report(request):
     }
 
     return render(request, 'adminNest/salesreport.html', {'sales_report': sales_report})
+
+@login_required(login_url='admin_login1')
+def export_csv(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=Expenses' + \
+        str(datetime.now()) + '.csv'
+
+    writer = csv.writer(response)
+    writer.writerow(['user', 'total_price', 'payment_mode', 'tracking_no', 'Orderd at', 'product_name', 'product_price', 'product_quantity'])
+
+    orders = Order.objects.all()
+    for order in orders:
+        order_items = OrderItem.objects.filter(order=order).select_related('variant')  # Use select_related to optimize DB queries
+        grouped_order_items = groupby(order_items, key=lambda x: x.order_id)
+        for order_id, items_group in grouped_order_items:
+            items_list = list(items_group)
+            for order_item in items_list:
+                writer.writerow([
+                    order.user.first_name if order_item == items_list[0] else "",
+                    order.total_price if order_item == items_list[0] else "",
+                    order.payment_mode if order_item == items_list[0] else "",
+                    order.tracking_no if order_item == items_list[0] else "",
+                    order.created_at if order_item == items_list[0] else "",  # Only include date in the first row
+                    order_item.variant.product.product_name,  # Replace 'product_name' with the actual attribute in your Product model
+                    order_item.price,
+                    order_item.quantity,
+                ])
+
+    return response
+
+
+@login_required(login_url='admin_login1')
+def generate_pdf(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=Expenses' + \
+        str(datetime.now()) + '.pdf'
+    w_pt = 12 * 40  
+    h_pt = 11 * 20   # 11 inches height   
+
+    pdf = FPDF(format=(w_pt, h_pt))
+    pdf.add_page()
+    pdf.set_auto_page_break(auto=True, margin=15)  # Enable auto page break with 15mm margin
+
+    # Set font styles
+    pdf.set_font('Arial', 'B', 12)  # Reduce font size for better readability
+
+    # Header Information
+    pdf.cell(0, 10, 'Order Details Report', 0, 1, 'C')
+    pdf.cell(0, 10, str(datetime.now()), 0, 1, 'C')
+    # Table Data
+    data = [['User', 'Total Price', 'Payment Mode', 'Tracking No', 'Ordered At', 'Product Name', 'Product Price', 'Product Quantity']]
+    orders = Order.objects.all().prefetch_related(
+        Prefetch('orderitem_set', queryset=OrderItem.objects.select_related('variant'))
+    )
+    for order in orders:
+        order_items = order.orderitem_set.all()
+        for index, order_item in enumerate(order_items):
+            data.append([
+                order.user.first_name if index == 0 else "",
+                order.total_price if index == 0 else "",
+                order.payment_mode if index == 0 else "",
+                order.tracking_no if index == 0 else "",
+                str(order.created_at.date()) if index == 0 else "",
+                order_item.variant.product.product_name,
+                order_item.price,
+                order_item.quantity,
+            ])
+    # Create Table
+    col_width = 57  
+    row_height = 10
+    for row in data:
+        for item in row:
+            pdf.cell(col_width, row_height, str(item), border=1)
+        pdf.ln()
+    response.write(pdf.output(dest='S').encode('latin1'))  
+    return response
 
 
 
