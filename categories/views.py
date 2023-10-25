@@ -2,24 +2,21 @@ from django.shortcuts import render, redirect
 import logging
 
 from products.models import Product
-from variant.models import Variant
+from variant.models import Variant,VariantImage
 from .models import category
 from django.contrib import messages
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 
 
-# @login_required(login_url='admin_login1')
+@login_required(login_url='admin_login1')
 def categories(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
     categories = category.objects.filter(is_available=True).order_by('id')
     return render(request, 'category/category.html', {'categories': categories})
 
-
-
-
-# @login_required(login_url='admin_login1')
+@login_required(login_url='admin_login1')
 def add_category(request):
     try:
         if not request.user.is_superuser:
@@ -51,8 +48,7 @@ def add_category(request):
         
             return redirect('categories')
 
-# Edit Category
-# @login_required(login_url='admin_login1')
+@login_required(login_url='admin_login1')
 def editcategory(request, editcategory_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -89,8 +85,7 @@ def editcategory(request, editcategory_id):
         messages.success(request,'category edited successfully!')
         return redirect ('categories')
 
-# Delete Category
-
+@login_required(login_url='admin_login1')
 def deletecategory(request,deletecategory_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -112,6 +107,7 @@ def deletecategory(request,deletecategory_id):
     messages.success(request,'category deleted successfully!')
     return redirect('categories')
 
+@login_required(login_url='admin_login1')
 def category_search(request):
     search = request.POST.get('search')
     if search is None or search.strip() == '':
@@ -135,10 +131,14 @@ def category_view(request):
 
 def category_product_view(request, c_id):
     category_instance = category.objects.get(id=c_id)
-    products = Product.objects.filter(category=category_instance)
+
+    variant = VariantImage.objects.filter(variant__product__category__id=c_id,variant__product__is_available=True).order_by('variant__product').distinct('variant__product')
+    
     context = {
         'category': category_instance,
-        'products': products
+        'variant': variant
+
+        
     }
     return render(request, 'category/category_product_view.html', context)
 

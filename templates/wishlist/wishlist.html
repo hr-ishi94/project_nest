@@ -28,7 +28,8 @@
                                 <th scope="col">product image</th>
                                 <th scope="col">Product name</th>
                                 <th scope="col">Price</th>
-                                <th scope="col">Stock Status</th>
+                                <th scope="col">Size</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Add to Cart</th>
                                 <th scope="col">Remove</th>
                                 
@@ -56,25 +57,29 @@
                                     </a>    
                                 </td>
                                 <td class="price" data-title="Price">
-                                    <a href="{% url 'product_show' i.variant.product.id i.variant.id %}"><strong>{{i.variant.product.product_name}}</strong></a>
+                                    <h4><a href="{% url 'product_show' i.variant.product.id i.variant.id %}"><strong>{{i.variant.product.product_name}}</strong></a></h4>
                                 </td>
                                 <td class="price" data-title="Price">
                                     <h3 class="text-brand">₹{{i.variant.product.product_price}}</h3>
                                 </td>
+                                <td class="price" data-title="Size">
+                                    <h5 class="">{{i.variant.size.size_range}}</h5>
+                                </td>
                                 {% if i.variant.quantity == 0  %}
-								<td class="text-center detail-info" data-title="Stock">
+								<td class="text-center detail-info" data-title="Status">
                                     <span class="stock-status in-stock mb-0"> Out of Stock </span>
                                 </td>
 								{% else %}
-								<td class="text-center detail-info" data-title="Stock">
+								<td class="text-center detail-info" data-title="Status">
                                     <span class="stock-status in-stock mb-0"> In Stock </span>
                                 </td>
 								{% endif %}
                                 
                                 <td class="text-right" data-title="Cart">
-                                    <button class="btn btn-block btn-outline-primary-2 btn-sm" data-product_id="{{ i.variant.id }}" data-size-id="{{ i.variant.size.id }}">
-										<i class="icon-cart-plus"></i>Add
-									</button>
+                                    <input readonly class="mtext-104 cl3 txt-center num-product" type="hidden"
+									name="num-product" value="1" id="qty-input">
+									<button class="btn btn-block btn-outline-primary-2" data-product_id="{{ i.variant.id }}" data-size-id="{{ i.variant.size.id }}">
+										<i class="icon-cart-plus"></i>Add 									</button>
                                 </td>
                                 <td class="action text-center" data-title="Remove">
                                     <a href="{% url 'remove_wish_list' i.id %}"><button type="button" class="btn-close" aria-label="Close"></button>
@@ -108,7 +113,7 @@
         console.log(product_id, add_qty,add_size, 'yyyyyyyyyyyyyyyyyyyyyyy1')
         $.ajax({
             method: "POST",
-            url: "",
+            url: "{% url 'add_cart' %}",
             data: {
 
                 'variant_id': product_id,

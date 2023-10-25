@@ -1,12 +1,15 @@
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import render
 from variant.models import VariantImage,Variant
 from products.models import Size,ProductReview,Product
-from django.db.models import Avg
+from django.db.models import Avg,Min,Max
 from categories.models import category
 from cart.models import *
 from wishlist.models import *
 
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+from .forms import PriceRangeForm
 
 
 
@@ -14,7 +17,11 @@ def index(request):
     
     categories=category.objects.all()
     products=Product.objects.all()
+    min_price=Product.objects.aggregate(Min('product_price'))
+    max_price=Product.objects.aggregate(Max('product_price'))
     
+
+
     variant_images=VariantImage.objects.filter(variant__product__is_available=True).order_by('variant__product').distinct('variant__product')
     p=Paginator(VariantImage.objects.filter(variant__product__is_available=True).order_by('variant__product').distinct('variant__product'), 5)
     page=request.GET.get('page')
@@ -26,7 +33,9 @@ def index(request):
         'products':products,
         'variant_images':variant_images,
         'product_page':product_page, 
-        'nums':nums
+        'nums':nums,
+        'min_price':min_price,
+        'max_price':max_price,
     }
 
    
@@ -92,6 +101,40 @@ def search_view(request):
     }    
 
     return render(request,'core/search.html',context)  
+
+
+# def filter_data(request):
+#     min=request.GET['minPrize']
+#     max=request.GET['maxPrize']
+#     allProducts= Product.objects.all().order_by('-id').distinct()
+#     allProducts=allProducts.filter(product_price__gte=min)
+#     allProducts=allProducts.filter(product_price__lte=max)
+#     t=render_to_string('ajax/product-list.html',{'data':allProducts})
+#     return JsonResponse({'data':t})
+
+
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+def filter_data(request):
+    if request.method == 'POST':
+        form = PriceRangeForm(request.POST)
+        if form.is_valid():
+            min_price = form.cleaned_data['min_price']
+            max_price = form.cleaned_data['max_price']
+            
+            # Store the filter criteria in the session
+            request.session['filter_min_price'] = min_price
+            request.session['filter_max_price'] = max_price
+
+    # Redirect back to the index view
+    return HttpResponseRedirect(reverse('index'))
+
+
+def error_404_view(request,exception):
+    return render(request,'404.html')
+
+
 
 
 

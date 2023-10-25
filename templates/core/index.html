@@ -99,12 +99,12 @@
                                                 <a href="shop-grid-right.html">Clothing</a>
                                             </div>
                                             <h2><a href="#">{{c.variant.product.product_name}}</a></h2>
-                                            <div class="product-rate-cover">
+                                            {% comment %} <div class="product-rate-cover">
                                                 <div class="product-rate d-inline-block">
                                                     <div class="product-rating" style="width: 90%"></div>
                                                 </div>
                                                 <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                            </div>
+                                            </div> {% endcomment %}
                                            
                                             <div class="product-card-bottom">
                                                 <div class="product-price">
@@ -3018,6 +3018,37 @@
                 <!--End banners-->
             </div>
             <div class="col-lg-1-5 primary-sidebar sticky-sidebar pt-30">
+                 <!-- Fillter By Price -->
+                
+                <!-- Product sidebar Widget -->
+                <form method="POST" action="{% url 'filter_data' %}">
+                    {% csrf_token %}
+                    <div class="price-filter">
+                        <div class="price-filter-inner">
+                            <li class="list-group-item">
+                                <input type="range" name="min_price" value="{{ min_price.product_price__min }}" max="{{ max_price.product_price__max }}" min="{{ min_price.product_price__min }}" id="rangeInput" oninput="maxPrice.value=this.value" />
+                                <p>{{ min_price.product_price__min }}-{{ max_price.product_price__max }}</p>
+                            </li>
+                            <li class="list-group-item">
+                                Max: <input type="number" name="max_price" value="{{ max_price.product_price__max }}" max="{{ max_price.product_price__max }}" min="{{ min_price.product_price__min }}" class="form-control" id="maxPrice" onkeyup="rangeInput.value=this.value" id="maxPrice" />
+                                <button type="submit" class="btn btn-info btn-sm mt-1">Filter</button>
+                            </li>
+                        </div>
+                    </div>
+                </form>
+                
+                {% if filtered_items %}
+                    <h2>Filtered Items:</h2>
+                    <ul>
+                        {% for product in filtered_items %}
+                            <li>{{ product.variant.product.name }} - {{ product.variant.product.product_price }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No items found for the selected price range.</p>
+                {% endif %}
+                
+                
                 <div class="sidebar-widget widget-category-2 mb-30">
                     <h5 class="section-title style-1 mb-30">Category</h5>
                     <ul>
@@ -3030,48 +3061,7 @@
                         
                     </ul>
                 </div>
-                <!-- Fillter By Price -->
-                
-                <!-- Product sidebar Widget -->
-                <div class="sidebar-widget product-sidebar mb-30 p-30 bg-grey border-radius-10">
-                    <h5 class="section-title style-1 mb-30">New products</h5>
-                    <div class="single-post clearfix">
-                        <div class="image">
-                            <img src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" alt="#" />
-                        </div>
-                        <div class="content pt-10">
-                            <h5><a href="shop-product-detail.html">Chen Cardigan</a></h5>
-                            <p class="price mb-0 mt-5">$99.50</p>
-                            <div class="product-rate">
-                                <div class="product-rating" style="width: 90%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="single-post clearfix">
-                        <div class="image">
-                            <img src="{% static 'assets/imgs/shop/thumbnail-4.jpg' %}" alt="#" />
-                        </div>
-                        <div class="content pt-10">
-                            <h6><a href="shop-product-detail.html">Chen Sweater</a></h6>
-                            <p class="price mb-0 mt-5">$89.50</p>
-                            <div class="product-rate">
-                                <div class="product-rating" style="width: 80%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="single-post clearfix">
-                        <div class="image">
-                            <img src="{% static 'assets/imgs/shop/thumbnail-5.jpg' %}" alt="#" />
-                        </div>
-                        <div class="content pt-10">
-                            <h6><a href="shop-product-detail.html">Colorful Jacket</a></h6>
-                            <p class="price mb-0 mt-5">$25</p>
-                            <div class="product-rate">
-                                <div class="product-rating" style="width: 60%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               
                 <div class="banner-img wow fadeIn mb-lg-0 animated d-lg-block d-none">
                     <img src="{% static 'assets/imgs/banner/banner-11.png' %}" alt="" />
                     <div class="banner-text">
@@ -3458,7 +3448,7 @@
     </section>
     <!--End 4 columns-->
 </main>
-
+<script type="text/javascript" src="{% static 'product-filter.js' %}"></script>
 
 
 {%endblock content%}

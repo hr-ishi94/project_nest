@@ -7,6 +7,7 @@ from django.db.models import Sum
 
 def default(request):
     categories=category.objects.all()
+    
    
     try:
         cart_count=Cart.objects.filter(user=request.user).count()
@@ -16,7 +17,7 @@ def default(request):
     except:
         cart_count= False
         wishlist_count=False  
-        wallet=False 
+        wallet=0
         total_balance=0
 
       
