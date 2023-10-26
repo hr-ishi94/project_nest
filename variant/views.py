@@ -10,7 +10,8 @@ from .forms import ImageForm
 from django.http import JsonResponse
 from django.db.models import Q
 # Create your views here.
-    
+
+@login_required(login_url='admin_login1')      
 def product_variant(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -24,8 +25,9 @@ def product_variant(request):
         'color_name' :color_name, 
          'product'   :product,
     }
-    return render(request,'variant/variant.html',{'variant_list':variant_list})  
-
+    return render(request,'variant/variant.html',{'variant_list':variant_list}) 
+ 
+@login_required(login_url='admin_login1')  
 def add_Product_Variant(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -69,6 +71,7 @@ def add_Product_Variant(request):
 
     return render(request, 'variant/variant.html')
 
+@login_required(login_url='admin_login1')  
 def edit_productvariant(request,variant_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -106,7 +109,8 @@ def edit_productvariant(request,variant_id):
         messages.success(request,'product edited successfully!')
         
         return redirect('product_variant') 
-            
+
+@login_required(login_url='admin_login1')              
 def productvariant_delete(request, variant_id):  
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -116,13 +120,15 @@ def productvariant_delete(request, variant_id):
     delete_productvariant.save()
     messages.success(request,'product_variant deleted successfully!')
     return redirect('product_variant')       
-    
+
+@login_required(login_url='admin_login1')      
 def product_size(request):
     if not request.user.is_superuser:
             return redirect('admin_login1')   
     products_size=Size.objects.filter(is_available =True).order_by('id')
     return render(request,'size_management/size_management.html',{'products_size':products_size})
 
+@login_required(login_url='admin_login1')  
 def add_size(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -144,6 +150,7 @@ def add_size(request):
 
     return render(request, 'size_management/size_management.html')
 
+@login_required(login_url='admin_login1')  
 def size_delete(request, size_range_id):  
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -153,12 +160,14 @@ def size_delete(request, size_range_id):
     messages.success(request,'Size deleted successfully!')
     return redirect('product_size') 
 
+@login_required(login_url='admin_login1')  
 def product_color(request):
     if not request.user.is_superuser:
             return redirect('admin_login1')   
     products_color=Color.objects.filter(is_available=True).order_by('id')
     return render(request,'color_management/color_management.html',{'products_color':products_color})
 
+@login_required(login_url='admin_login1')  
 def add_color(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -193,6 +202,7 @@ def add_color(request):
 
     return render(request, 'color_management/color_management.html')
 
+@login_required(login_url='admin_login1')  
 def color_delete(request, color_name_id):  
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -201,7 +211,8 @@ def color_delete(request, color_name_id):
     delete_color.save()
     messages.success(request,'color deleted successfully!')
     return redirect('product_color') 
-   
+
+@login_required(login_url='admin_login1')     
 def get_color_name(color_code):
     try:
         color_name = webcolors.rgb_to_name(webcolors.hex_to_rgb(color_code))
@@ -209,7 +220,7 @@ def get_color_name(color_code):
     except ValueError:
         return "Unknown"
     
-    
+@login_required(login_url='admin_login1')  
 def image_list(request,variant_id):  
     image=VariantImage.objects.filter(variant=variant_id,is_available =True)
     add_image =variant_id
@@ -241,6 +252,7 @@ def image_view(request, img_id):
     context = {'form': form,'img_id':img_id}
     return render(request, 'variant/image_add.html', context)
 
+@login_required(login_url='admin_login1')  
 def image_delete(request, image_id):  
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -257,7 +269,7 @@ def image_delete(request, image_id):
            return redirect('product_variant') 
        
        
-       
+@login_required(login_url='admin_login1')         
 def product_variant_view(request,product_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -276,6 +288,7 @@ def product_variant_view(request,product_id):
     # variant_id
     return render(request,'view/variant_view.html',{'variant_list':variant_list})   
 
+@login_required(login_url='admin_login1')  
 def variant_search(request):
     search = request.POST.get('search')
     if search is None or search.strip() == '':

@@ -43,9 +43,9 @@ EMAIL_USE_TLS=True
 SECRET_KEY = 'django-insecure-m6=@_dl3@2si0f07f304t27)#t2mveax0u=s71b^a%f^dq=z0$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition

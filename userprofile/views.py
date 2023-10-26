@@ -47,6 +47,7 @@ def userprofile(request):
         }
     return render(request,'userprofile/userprofile.html',context)
 
+@login_required(login_url='user_login1')
 def edit_profile(request):
     if request.method == 'POST':
         phone_number = request.POST.get('phone_number')
@@ -58,7 +59,7 @@ def edit_profile(request):
         except:  
                return redirect('userprofile') 
 
-        # print(phone_number,first_name)
+        
 
         if phone_number == '':
             messages.error(request, 'phone_number is empty')
@@ -158,7 +159,7 @@ def View_address(request,view_id):
     return render(request,'userprofile/view_address.html',{'Viewaddress':Viewaddress})   
 
      
-
+@login_required(login_url='user_login1')
 def add_address(request,add_id):
 
     if request.method == 'POST':
@@ -290,7 +291,7 @@ def add_address(request,add_id):
         check=2    
     return render(request,'userprofile/add_address.html',{'check':check,'wishlist_count':wishlist_count,'cart_count':cart_count,})
 
-
+@login_required(login_url='user_login1')
 def edit_address(request,edit_id):
 
     if request.method == 'POST':
@@ -385,7 +386,7 @@ def edit_address(request,edit_id):
     wishlist_count =Wishlist.objects.filter(user=request.user).count()        
     return render(request,'userprofile/edit_address.html',{'editaddress':editaddress, 'wishlist_count':wishlist_count,'cart_count':cart_count,})
 
-
+@login_required(login_url='user_login1')
 def delete_address(request,delete_id):
     address = Address.objects.get(id = delete_id)
     address.is_available = False
@@ -393,7 +394,7 @@ def delete_address(request,delete_id):
     messages.success(request,' Address deleted successfully!')
     
     return redirect('userprofile')
-
+@login_required(login_url='user_login1')
 def order_view_user(request,view_id):
     try:
         orderview = Order.objects.get(id=view_id)
