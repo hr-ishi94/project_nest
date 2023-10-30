@@ -71,56 +71,81 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
                             <div class="row product-grid-4">
-                                {% for c in product_page%}
-                                <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
-                                    <div class="product-cart-wrap mb-30">
-                                        <div class="product-img-action-wrap">
-                                            <div class="product-img product-img-zoom">
-                                                <a href="{% url 'product_show' c.variant.product.id c.variant.id %}">
-                                                    <img class="default-img" src="{{c.image.url}}" alt="" />
-                                                    <img class="hover-img" src="{{c.image.url}}" alt="" />
-                                                </a>
-                                            </div>
-                                            {% comment %} <div class="product-action-1">
-                                                <a aria-label="Add To Wishlist" class="action-btn" href="{%url 'add_wish_list'%}" data-product_id="{{c.variant.id}}"><i class="fi-rs-heart"></i></a>
-                                                <a aria-label="Compare" class="action-btn" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
-                                                <a aria-label="Quick view" class="action-btn" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
-                                            </div> {% endcomment %}
-                                            <div class="product-action">
-                                                <input type="hidden"  value="{{ c.variant.size.id }}" id="size-input" >
-                                                
-                                            </div>
-                                            <div class="product-badges product-badges-position product-badges-mrg">
-                                                <span class="hot">{{c.variant.product.offer.discount_amount|div:c.variant.product.product_price|mul:100|floatformat:0}}% OFF</span>
-                                            </div>
-                                        </div>
-                                        <div class="product-content-wrap">
-                                            <div class="product-category">
-                                                <a href="shop-grid-right.html">Clothing</a>
-                                            </div>
-                                            <h2><a href="#">{{c.variant.product.product_name}}</a></h2>
-                                            {% comment %} <div class="product-rate-cover">
-                                                <div class="product-rate d-inline-block">
-                                                    <div class="product-rating" style="width: 90%"></div>
+                                {% if filtered_products %}
+                                    {% for c in filtered_products %}
+                                        <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
+                                            <div class="product-cart-wrap mb-30">
+                                                <div class="product-img-action-wrap">
+                                                    <div class="product-img product-img-zoom">
+                                                        <a href="{% url 'product_show' c.variant.product.id c.variant.id %}">
+                                                            <img class="default-img" src="{{c.image.url}}" alt="" />
+                                                            <img class="hover-img" src="{{c.image.url}}" alt="" />
+                                                        </a>
+                                                    </div>
+                                                    
+                                                    <div class="product-action">
+                                                        <input type="hidden"  value="{{ c.variant.size.id }}" id="size-input" >
+                                                    </div>
+                                                    <div class="product-badges product-badges-position product-badges-mrg">
+                                                        <span class="hot">{{c.variant.product.offer.discount_amount|div:c.variant.product.product_price|mul:100|floatformat:0}}% OFF</span>
+                                                    </div>
                                                 </div>
-                                                <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                            </div> {% endcomment %}
-                                           
-                                            <div class="product-card-bottom">
-                                                <div class="product-price">
-                                                    <span>₹{{c.variant.product.product_price|sub:c.variant.product.offer.discount_amount}}</span>
-                                                    <span class="old-price">₹{{c.variant.product.product_price}}</span>
-                                                </div>
-                                                <div class="add-cart">
-                                                    <a class="add"  data-product_id="{{ c.variant.id }}" href=""><i class="fi-rs-shopping-cart mr-5"></i>View </a>
+                                                <div class="product-content-wrap">
+                                                    <div class="product-category">
+                                                        <a href="shop-grid-right.html">Clothing</a>
+                                                    </div>
+                                                    <h2><a href="{% url 'product_show' c.variant.product.id c.variant.id %}">{{c.variant.product.product_name}}</a></h2>
+                                                    <div class="product-card-bottom">
+                                                        <div class="product-price">
+                                                            <span>₹{{c.variant.product.product_price|sub:c.variant.product.offer.discount_amount}}</span>
+                                                            <span class="old-price">₹{{c.variant.product.product_price}}</span>
+                                                        </div>
+                                                        <div class="add-cart">
+                                                            <a class="add" data-product_id="{{ c.variant.id }}" href=""><i class="fi-rs-shopping-cart mr-5"></i>View </a>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-
-                                {% endfor %}
-                                
+                                    {% endfor %}
+                                {% else %}
+                                    {% for c in product_page %}
+                                        <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
+                                            <div class="product-cart-wrap mb-30">
+                                                <div class="product-img-action-wrap">
+                                                    <div class="product-img product-img-zoom">
+                                                        <a href="{% url 'product_show' c.variant.product.id c.variant.id %}">
+                                                            <img class="default-img" src="{{c.image.url}}" alt="" />
+                                                            <img class "hover-img" src="{{c.image.url}}" alt="" />
+                                                        </a>
+                                                    </div>
+                                                    
+                                                    <div class="product-action">
+                                                        <input type="hidden" value="{{ c.variant.size.id }}" id="size-input">
+                                                    </div>
+                                                    <div class="product-badges product-badges-position product-badges-mrg">
+                                                        <span class="hot">{{c.variant.product.offer.discount_amount|div:c.variant.product.product_price|mul:100|floatformat:0}}% OFF</span>
+                                                    </div>
+                                                </div>
+                                                <div class="product-content-wrap">
+                                                    <div class="product-category">
+                                                        <a href="shop-grid-right.html">Clothing</a>
+                                                    </div>
+                                                    <h2><a href="{% url 'product_show' c.variant.product.id c.variant.id %}">{{c.variant.product.product_name}}</a></h2>
+                                                    <div class="product-card-bottom">
+                                                        <div class="product-price">
+                                                            <span>₹{{c.variant.product.product_price|sub:c.variant.product.offer.discount_amount}}</span>
+                                                            <span class="old-price">₹{{c.variant.product.product_price}}</span>
+                                                        </div>
+                                                        <div class="add-cart">
+                                                            <a class="add" data-product_id="{{ c.variant.id }}" href=""><i class="fi-rs-shopping-cart mr-5"></i>View </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                             
                             <div class="pagination-area mt-30 mb-50">
@@ -150,7 +175,7 @@
                             <!--End product-grid-4-->
                         </div>
                         <!--En tab one-->
-                        <div class="tab-pane fade" id="tab-two" role="tabpanel" aria-labelledby="tab-two">
+                        {% comment %} <div class="tab-pane fade" id="tab-two" role="tabpanel" aria-labelledby="tab-two">
                             <div class="row product-grid-4">
                                 <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
                                     <div class="product-cart-wrap mb-30">
@@ -2812,7 +2837,7 @@
                                 <!--end product card-->
                             </div>
                             <!--End product-grid-4-->
-                        </div>
+                        </div> {% endcomment %}
                         <!--En tab seven-->
                     </div>
                     <!--End tab-content-->
@@ -2824,17 +2849,16 @@
                 <div class="sidebar-widget widget-category-2 mb-30">
                     <h5 class="section-title style-1 mb-30">Category</h5>
                     <ul>
-                        {%for c in categories%}
+                        {% for c in categories %}
                         <li>
-                            <a href="{%url 'category_product_view' c_id=c.id %}"> <img src="{{c.categories_image.url}}" alt="" />{{c.categories}}</a>
-                            {% comment %} <span class="count">{{products.count}}</span> {% endcomment %}
+                            <a href="{% url 'category_product_view' c_id=c.id %}">
+                                <img src="{{ c.categories_image.url }}" alt="" />{{ c.categories }}
+                            </a>
                         </li>
-                        {%endfor%}
-                        
+                        {% endfor %}
                     </ul>
                 </div>
-                 <!-- Fillter By Price -->
-                
+            
                 <!-- Product sidebar Widget -->
                 <form method="POST" action="{% url 'filter_data' %}">
                     {% csrf_token %}
@@ -2845,13 +2869,14 @@
                                 <p>{{ min_price.product_price__min }}-{{ max_price.product_price__max }}</p>
                             </li>
                             <li class="list-group-item">
-                                Max: <input type="number" name="max_price" value="{{ max_price.product_price__max }}" max="{{ max_price.product_price__max }}" min="{{ min_price.product_price__min }}" class="form-control" id="maxPrice" onkeyup="rangeInput.value=this.value" id="maxPrice" />
+                                Max: <input type="number" name="max_price" value="{{ max_price.product_price__max }}" max="{{ max_price.product_price__max }}" min="{{ min_price.product_price__min }}" class="form-control" onkeyup="rangeInput.value=this.value" />
                                 <button type="submit" class="btn btn-info btn-sm mt-1">Filter</button>
                             </li>
                         </div>
                     </div>
                 </form>
                 
+            
                 {% if filtered_items %}
                     <h2>Filtered Items:</h2>
                     <ul>
@@ -2862,21 +2887,13 @@
                 {% else %}
                     <p>No items found for the selected price range.</p>
                 {% endif %}
+            </div>
+            
                 
                 
                 
                
-                {% comment %} <div class="banner-img wow fadeIn mb-lg-0 animated d-lg-block d-none">
-                    <img src="{% static 'assets/imgs/banner/banner-11.png' %}" alt="" />
-                    <div class="banner-text">
-                        <span>Oganic</span>
-                        <h4>
-                            Save 17% <br />
-                            on <span class="text-brand">Oganic</span><br />
-                            Juice
-                        </h4>
-                    </div>
-                </div> {% endcomment %}
+                
             </div>
         </div>
     </div>
@@ -2909,274 +2926,7 @@
             </div>
         </div>
     </section>
-    <!--End category slider-->
-    {% comment %} <section class="section-padding mb-30">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-3 col-lg-4 col-md-6 mb-sm-5 mb-md-0">
-                    <h4 class="section-title style-1 mb-30 animated animated">Top Selling</h4>
-                    <div class="product-list-small animated animated">
-                        <article class="row align-items-center hover-up">
-                            <figure class="col-md-4 mb-0">
-                                <a href="shop-product-right.html"><img src="{% static 'assets/imgs/shop/thumbnail-1.jpg' %}" alt="" /></a>
-                            </figure>
-                            <div class="col-md-8 mb-0">
-                                <h6>
-                                    <a href="shop-product-right.html">Nestle Original Coffee-Mate Coffee Creamer</a>
-                                </h6>
-                                <div class="product-rate-cover">
-                                    <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
-                                    </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                </div>
-                                <div class="product-price">
-                                    <span>$32.85</span>
-                                    <span class="old-price">$33.8</span>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="row align-items-center hover-up">
-                            <figure class="col-md-4 mb-0">
-                                <a href="shop-product-right.html"><img src="{% static 'assets/imgs/shop/thumbnail-2.jpg' %}" alt="" /></a>
-                            </figure>
-                            <div class="col-md-8 mb-0">
-                                <h6>
-                                    <a href="shop-product-right.html">Nestle Original Coffee-Mate Coffee Creamer</a>
-                                </h6>
-                                <div class="product-rate-cover">
-                                    <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
-                                    </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                </div>
-                                <div class="product-price">
-                                    <span>$32.85</span>
-                                    <span class="old-price">$33.8</span>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="row align-items-center hover-up">
-                            <figure class="col-md-4 mb-0">
-                                <a href="shop-product-right.html"><img src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" alt="" /></a>
-                            </figure>
-                            <div class="col-md-8 mb-0">
-                                <h6>
-                                    <a href="shop-product-right.html">Nestle Original Coffee-Mate Coffee Creamer</a>
-                                </h6>
-                                <div class="product-rate-cover">
-                                    <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
-                                    </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                </div>
-                                <div class="product-price">
-                                    <span>$32.85</span>
-                                    <span class="old-price">$33.8</span>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 mb-md-0">
-                    <h4 class="section-title style-1 mb-30 animated animated">Trending Products</h4>
-                    <div class="product-list-small animated animated">
-                        <article class="row align-items-center hover-up">
-                            <figure class="col-md-4 mb-0">
-                                <a href="shop-product-right.html"><img src="{% static 'assets/imgs/shop/thumbnail-4.jpg' %}" alt="" /></a>
-                            </figure>
-                            <div class="col-md-8 mb-0">
-                                <h6>
-                                    <a href="shop-product-right.html">Organic Cage-Free Grade A Large Brown Eggs</a>
-                                </h6>
-                                <div class="product-rate-cover">
-                                    <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
-                                    </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                </div>
-                                <div class="product-price">
-                                    <span>$32.85</span>
-                                    <span class="old-price">$33.8</span>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="row align-items-center hover-up">
-                            <figure class="col-md-4 mb-0">
-                                <a href="shop-product-right.html"><img src="{% static 'assets/imgs/shop/thumbnail-5.jpg' %}" alt="" /></a>
-                            </figure>
-                            <div class="col-md-8 mb-0">
-                                <h6>
-                                    <a href="shop-product-right.html">Seeds of Change Organic Quinoa, Brown, & Red Rice</a>
-                                </h6>
-                                <div class="product-rate-cover">
-                                    <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
-                                    </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                </div>
-                                <div class="product-price">
-                                    <span>$32.85</span>
-                                    <span class="old-price">$33.8</span>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="row align-items-center hover-up">
-                            <figure class="col-md-4 mb-0">
-                                <a href="shop-product-right.html"><img src="{% static 'assets/imgs/shop/thumbnail-6.jpg' %}" alt="" /></a>
-                            </figure>
-                            <div class="col-md-8 mb-0">
-                                <h6>
-                                    <a href="shop-product-right.html">Naturally Flavored Cinnamon Vanilla Light Roast Coffee</a>
-                                </h6>
-                                <div class="product-rate-cover">
-                                    <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
-                                    </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                </div>
-                                <div class="product-price">
-                                    <span>$32.85</span>
-                                    <span class="old-price">$33.8</span>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 mb-sm-5 mb-md-0 d-none d-lg-block">
-                    <h4 class="section-title style-1 mb-30 animated animated">Recently added</h4>
-                    <div class="product-list-small animated animated">
-                        <article class="row align-items-center hover-up">
-                            <figure class="col-md-4 mb-0">
-                                <a href="shop-product-right.html"><img src="{% static 'assets/imgs/shop/thumbnail-7.jpg' %}" alt="" /></a>
-                            </figure>
-                            <div class="col-md-8 mb-0">
-                                <h6>
-                                    <a href="shop-product-right.html">Pepperidge Farm Farmhouse Hearty White Bread</a>
-                                </h6>
-                                <div class="product-rate-cover">
-                                    <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
-                                    </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                </div>
-                                <div class="product-price">
-                                    <span>$32.85</span>
-                                    <span class="old-price">$33.8</span>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="row align-items-center hover-up">
-                            <figure class="col-md-4 mb-0">
-                                <a href="shop-product-right.html"><img src="{% static 'assets/imgs/shop/thumbnail-8.jpg' %}" alt="" /></a>
-                            </figure>
-                            <div class="col-md-8 mb-0">
-                                <h6>
-                                    <a href="shop-product-right.html">Organic Frozen Triple Berry Blend</a>
-                                </h6>
-                                <div class="product-rate-cover">
-                                    <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
-                                    </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                </div>
-                                <div class="product-price">
-                                    <span>$32.85</span>
-                                    <span class="old-price">$33.8</span>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="row align-items-center hover-up">
-                            <figure class="col-md-4 mb-0">
-                                <a href="shop-product-right.html"><img src="{% static 'assets/imgs/shop/thumbnail-9.jpg' %}" alt="" /></a>
-                            </figure>
-                            <div class="col-md-8 mb-0">
-                                <h6>
-                                    <a href="shop-product-right.html">Oroweat Country Buttermilk Bread</a>
-                                </h6>
-                                <div class="product-rate-cover">
-                                    <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
-                                    </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                </div>
-                                <div class="product-price">
-                                    <span>$32.85</span>
-                                    <span class="old-price">$33.8</span>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 mb-sm-5 mb-md-0 d-none d-xl-block">
-                    <h4 class="section-title style-1 mb-30 animated animated">Top Rated</h4>
-                    <div class="product-list-small animated animated">
-                        <article class="row align-items-center hover-up">
-                            <figure class="col-md-4 mb-0">
-                                <a href="shop-product-right.html"><img src="{% static 'assets/imgs/shop/thumbnail-10.jpg' %}" alt="" /></a>
-                            </figure>
-                            <div class="col-md-8 mb-0">
-                                <h6>
-                                    <a href="shop-product-right.html">Foster Farms Takeout Crispy Classic Buffalo Wings</a>
-                                </h6>
-                                <div class="product-rate-cover">
-                                    <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
-                                    </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                </div>
-                                <div class="product-price">
-                                    <span>$32.85</span>
-                                    <span class="old-price">$33.8</span>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="row align-items-center hover-up">
-                            <figure class="col-md-4 mb-0">
-                                <a href="shop-product-right.html"><img src="{% static 'assets/imgs/shop/thumbnail-11.jpg' %}" alt="" /></a>
-                            </figure>
-                            <div class="col-md-8 mb-0">
-                                <h6>
-                                    <a href="shop-product-right.html">Angie’s Boomchickapop Sweet & Salty Kettle Corn</a>
-                                </h6>
-                                <div class="product-rate-cover">
-                                    <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
-                                    </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                </div>
-                                <div class="product-price">
-                                    <span>$32.85</span>
-                                    <span class="old-price">$33.8</span>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="row align-items-center hover-up">
-                            <figure class="col-md-4 mb-0">
-                                <a href="shop-product-right.html"><img src="{% static 'assets/imgs/shop/thumbnail-12.jpg' %}" alt="" /></a>
-                            </figure>
-                            <div class="col-md-8 mb-0">
-                                <h6>
-                                    <a href="shop-product-right.html">All Natural Italian-Style Chicken Meatballs</a>
-                                </h6>
-                                <div class="product-rate-cover">
-                                    <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
-                                    </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
-                                </div>
-                                <div class="product-price">
-                                    <span>$32.85</span>
-                                    <span class="old-price">$33.8</span>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> {% endcomment %}
-    <!--End 4 columns-->
+   
 </main>
 <script type="text/javascript" src="{% static 'product-filter.js' %}"></script>
 
