@@ -1,0 +1,4 @@
+Django==4.2.7
+fpdf==1.7.2
+twilio==8.10.0
+webcolors==1.13
