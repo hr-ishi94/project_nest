@@ -136,13 +136,13 @@
         <main class="main-wrap">
             <header class="main-header navbar">
                 <div class="col-search">
-                    <form class="searchform">
+                    {% comment %} <form class="searchform">
                         <div class="input-group">
                             <input list="search_terms" type="text" class="form-control" placeholder="Search term" />
                             <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
                         </div>
                         
-                    </form>
+                    </form> {% endcomment %}
                 </div>
                 <div class="col-nav">
                     <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"><i class="material-icons md-apps"></i></button>
@@ -195,7 +195,7 @@
             {%endblock content%}
 
 
-             <!-- content-main end// -->
+             {% comment %} <!-- content-main end// -->
              <footer class="main-footer font-xs">
                 <div class="row pb-30 pt-15">
                     <div class="col-sm-6">
@@ -208,7 +208,7 @@
                         <div class="text-sm-end">All rights reserved</div>
                     </div>
                 </div>
-            </footer>
+            </footer> {% endcomment %}
         </main>
         <script src="{% static 'assets-admin/js/vendors/jquery-3.6.0.min.js' %}"></script>
         <script src="{% static 'assets-admin/js/vendors/bootstrap.bundle.min.js' %}"></script>

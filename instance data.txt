@@ -1,0 +1,11 @@
+instance id :
+ssh -i "nest server.pem" ubuntu@ec2-51-20-137-231.eu-north-1.compute.amazonaws.com
+
+
+to run our nginx server:
+sudo service nginx restart
+
+dbuser:
+postgres
+dbpwd:
+Hrishi

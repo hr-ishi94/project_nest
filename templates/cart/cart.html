@@ -16,7 +16,7 @@
     <div class="page-header breadcrumb-wrap">
         <div class="container">
             <div class="breadcrumb">
-                <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                <a href="{%url 'index'%}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
                 <span></span> Shop
                 <span></span> Cart
             </div>
@@ -73,7 +73,7 @@
                                     <td class="price-col">{{i.variant.size.size_range}}</td>
                                     {% if i.variant.product.offer %}
                                     <td class="price-col"><del style="color: brown;" >₹{{i.variant.product.product_price}}</del> 
-                                        <span>${{i.variant.product.product_price|sub:i.variant.product.offer.discount_amount}}</span>
+                                        <span>₹{{i.variant.product.product_price|sub:i.variant.product.offer.discount_amount}}</span>
                                     </td>
 
                                     {% else %}
@@ -122,7 +122,7 @@
                 <div class="divider-2 mb-30"></div>
                 <div class="cart-action d-flex justify-content-between">
                     <a href="{%url 'index'%}" class="btn "><i class="fi-rs-arrow-left mr-10"></i>Continue Shopping</a>
-                    <a  href="{%url 'cart'%}" class="btn  mr-10 mb-sm-15"><i class="fi-rs-refresh mr-10"></i>Update Cart</a>
+                  
                 </div>
                 
             </div>
@@ -136,7 +136,7 @@
                                         <h6 class="text-muted">Subtotal</h6>
                                     </td>
                                     <td class="cart_total_amount">
-                                        <h4 class="text-brand text-end">₹{{total_price}}</h4>
+                                        <h4 class="text-brand text-end" id="Subtotal">₹{{total_price}}</h4>
                                     </td>
                                 </tr>
                                 <tr>
@@ -160,7 +160,7 @@
                                         <h6 class="text-muted">Total</h6>
                                     </td>
                                     <td class="cart_total_amount">
-                                        <h4 class="text-brand text-end">₹{{total_price}}</h4>
+                                        <h4 class="text-brand text-end" id="grand_total">₹{{total_price}}</h4>
                                     </td>
                                 </tr>
                             </tbody>
@@ -206,10 +206,10 @@
                 } else {
                     totalColElement.text(response.single_total);
                 }
-                document.getElementById('Subtotal').textContent = sub_total
+                document.getElementById('Subtotal').textContent = sub_total;
+                document.getElementById('grand_total').textContent = sub_total;
 
-                {% comment %} document.getElementById('tax_field').textContent = sub_total * 0.18 {% endcomment %}
-                {% comment %} document.getElementById('grand_total').textContent = sub_total + (sub_total * 0.18)  {% endcomment %}
+                
                 document.getElementById('grand_total').textContent = sub_total
                 document.getElementById('single').textContent = single
 
@@ -223,7 +223,7 @@
     <div class="page-header breadcrumb-wrap">
         <div class="container">
             <div class="breadcrumb">
-                <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                <a href="{%url 'index'%}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
                 <span></span> Shop
                 <span></span> Cart
             </div>
@@ -268,8 +268,8 @@
                 </div>
                 <div class="divider-2 mb-30"></div>
                 <div class="cart-action d-flex justify-content-between">
-                    <a class="btn "><i class="fi-rs-arrow-left mr-10"></i>Continue Shopping</a>
-                    <a href="{%url 'cart'%}" class="btn  mr-10 mb-sm-15" ><i class="fi-rs-refresh mr-10"></i>Update Cart</a>
+                    <a href="{%url 'index'%}"class="btn "><i class="fi-rs-arrow-left mr-10"></i>Continue Shopping</a>
+                   
                 </div>
                 
             </div>

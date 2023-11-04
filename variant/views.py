@@ -160,14 +160,12 @@ def size_delete(request, size_range_id):
     messages.success(request,'Size deleted successfully!')
     return redirect('product_size') 
 
-@login_required(login_url='admin_login1')  
 def product_color(request):
     if not request.user.is_superuser:
             return redirect('admin_login1')   
     products_color=Color.objects.filter(is_available=True).order_by('id')
     return render(request,'color_management/color_management.html',{'products_color':products_color})
 
-@login_required(login_url='admin_login1')  
 def add_color(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -202,7 +200,6 @@ def add_color(request):
 
     return render(request, 'color_management/color_management.html')
 
-@login_required(login_url='admin_login1')  
 def color_delete(request, color_name_id):  
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -211,14 +208,14 @@ def color_delete(request, color_name_id):
     delete_color.save()
     messages.success(request,'color deleted successfully!')
     return redirect('product_color') 
-
-@login_required(login_url='admin_login1')     
+   
 def get_color_name(color_code):
     try:
         color_name = webcolors.rgb_to_name(webcolors.hex_to_rgb(color_code))
         return color_name
     except ValueError:
         return "Unknown"
+
     
 @login_required(login_url='admin_login1')  
 def image_list(request,variant_id):  

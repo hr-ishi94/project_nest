@@ -39,7 +39,7 @@ def admin_login1(request):
 
         else:
             messages.error(request,'Invalid username or password!')
-            return render(request,'admin_login1')
+            return redirect('admin_login1')
 
     return render(request,'adminNest/admin_login1.html')
 
@@ -256,55 +256,88 @@ def export_csv(request):
     return response
 
 
-@login_required(login_url='admin_login1')
+from io import BytesIO
+from datetime import datetime
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib import colors
+from django.shortcuts import redirect
+from django.db.models import Prefetch
+from checkout.models import Order, OrderItem
+
+
+from reportlab.lib.styles import getSampleStyleSheet
+
+styles = getSampleStyleSheet()
+
+
 def generate_pdf(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
-    
+
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=Expenses' + \
-        str(datetime.now()) + '.pdf'
-    w_pt = 12 * 40  
-    h_pt = 11 * 20   # 11 inches height   
+    response['Content-Disposition'] = 'attachment; filename=SalesReport' + str(datetime.now()) + '.pdf'
+    buffer = BytesIO()
 
-    pdf = FPDF(format=(w_pt, h_pt))
-    pdf.add_page()
-    pdf.set_auto_page_break(auto=True, margin=15)  # Enable auto page break with 15mm margin
-
-    # Set font styles
-    pdf.set_font('Arial', 'B', 12)  # Reduce font size for better readability
+    doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
+    elements = []
 
     # Header Information
-    pdf.cell(0, 10, 'Order Details Report', 0, 1, 'C')
-    pdf.cell(0, 10, str(datetime.now()), 0, 1, 'C')
-    # Table Data
+    elements.append(Paragraph('Sales Report', style=getSampleStyleSheet()['Title']))
+    elements.append(Paragraph(str(datetime.now()), style=getSampleStyleSheet()['Normal']))
+    elements.append(Paragraph('<br/><br/>', style=getSampleStyleSheet()['Normal']))
+
     data = [['User', 'Total Price', 'Payment Mode', 'Tracking No', 'Ordered At', 'Product Name', 'Product Price', 'Product Quantity']]
     orders = Order.objects.all().prefetch_related(
         Prefetch('orderitem_set', queryset=OrderItem.objects.select_related('variant'))
     )
+    total_sales = sum(order.total_price for order in orders)
+    total_orders = orders.count()
+
     for order in orders:
         order_items = order.orderitem_set.all()
+        total_sales += order.total_price
+        total_orders += 1
         for index, order_item in enumerate(order_items):
             data.append([
                 order.user.first_name if index == 0 else "",
-                order.total_price if index == 0 else "",
+                'Rs.' + str(order.total_price) if index == 0 else "",
                 order.payment_mode if index == 0 else "",
                 order.tracking_no if index == 0 else "",
                 str(order.created_at.date()) if index == 0 else "",
                 order_item.variant.product.product_name,
-                order_item.price,
+                'Rs.' + str(order_item.price),
                 order_item.quantity,
             ])
-    # Create Table
-    col_width = 57  
-    row_height = 10
-    for row in data:
-        for item in row:
-            pdf.cell(col_width, row_height, str(item), border=1)
-        pdf.ln()
-    response.write(pdf.output(dest='S').encode('latin1'))  
+
+    # Create a table with data
+    table = Table(data)
+
+    # Add style to the table
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ])
+    table.setStyle(style)
+
+    elements.append(table)
+
+    elements.append(Paragraph('<br/><br/>', style=getSampleStyleSheet()['Normal']))
+    # Add Total Sales and Total Orders
+    elements.append(Paragraph(f'Total Sales: Rs. {total_sales}', style=getSampleStyleSheet()['Normal']))
+    elements.append(Paragraph(f'Total Orders: {total_orders}nos.', style=getSampleStyleSheet()['Normal']))
+
+    doc.build(elements)
+
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+
     return response
-
-
 
  

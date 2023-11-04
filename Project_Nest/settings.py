@@ -116,8 +116,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ProjectNest',
-        'USER': 'postgres',
-        'PASSWORD': 'Hrishi@94',
+        'USER': 'hrishikesh1994',
+        'PASSWORD': 'Hrishikesh@1994',
         'HOST': 'localhost',
         'PORT': '5432',
     }

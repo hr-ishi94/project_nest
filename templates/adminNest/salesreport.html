@@ -3,10 +3,26 @@
 
 {% block content %}
 
-
+<div class='container'>
     
 <section class="section dashboard" >
-    <h2 class="text-dark font-weight-bold" style="margin-left: 10px;"> Sales Report </h2>
+    <br>
+    <div class="content-header">
+        
+        <div>
+            <h2 class="content-title card-title">Sales Report</h2>
+           
+        </div>
+        <div class="col-lg-2 col-6 col-md-3">
+            
+              <a href="{% url 'generate_pdf' %}" class="btn btn-brand" >
+                Download PDF <i class="mdi mdi-file-pdf" style="font-size: x-large;"></i>
+              </a>
+        </div>
+    </div>
+                            
+                          
+    <h2 class="text-dark font-weight-bold" style="margin-left: 10px;"> </h2>
     <div class="row">
         <!-- Left side columns -->
         <div class="col-lg-12" >
@@ -18,11 +34,11 @@
                             <form style="margin-left: 20%; font-size: large; " method="get" action="{% url 'sales_report' %}">
                                 <label for="start_date">Start Date:</label>
                                 <input type="date" id="start-date" name="start_date" value="{{ sales_report.start_date }}" required>
-                                <label for="end_date">End Date:</label>
+                                <label for="end_date"> End Date:</label>
                                 <input type="date" id="end-date" name="end_date" value="{{ sales_report.end_date }}" required>
 
                                 <!-- <button type="submit" name="all_sales" class="btn btn-primary">All Sales</button> -->
-                                <button type="submit" class="btn btn-primary">Generate Report</button>
+                                <button type="submit" class="btn btn-primary btn-md">Generate Report</button>
                                 
 
                                   
@@ -45,14 +61,7 @@
                             </ul>
                         </div>
                             <h2 style="margin-top: 5%;">{% if sales_report.start_date and sales_report.end_date %}All Orders{% else %}Recent Orders{% endif %}</h2>
-                            {% if sales_report.start_date and sales_report.end_date %}
-                            <a href="{% url 'export_csv' %}" class="btn btn-success">
-                                Download CSV <i class="mdi mdi-file-excel" style="font-size: x-large;"></i>
-                              </a>
-                              <a href="{% url 'generate_pdf' %}" class="btn btn-danger" >
-                                Download PDF <i class="mdi mdi-file-pdf" style="font-size: x-large;"></i>
-                              </a>
-                              {% endif %}
+                            
                             <div class="table-responsive">
                             <table id="example" class="display nowrap mt-5 table" style="width:100%">
                                 <thead>
@@ -110,6 +119,7 @@
         </div>
     </div>
 </section>
+</div>
 
 
 <script>
