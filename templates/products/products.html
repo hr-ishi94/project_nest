@@ -18,10 +18,10 @@
         </div>
     </div>
     <div class="card mb-4">
-        <header class="card-header">
+        {% comment %} <header class="card-header">
             <div class="row gx-3">
                 <div class="col-lg-4 col-md-6 me-auto">
-                    {% comment %} <div class="input-group">
+                     <div class="input-group">
                         <div class="form-outline">
                             <form action="{% url 'product_search' %}" method="POST">
                             {% csrf_token %}
@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                             </form>
-                      </div> {% endcomment %}
+                      </div> 
                 </div>
                 <div class="col-lg-2 col-md-3 col-6">
                     <form id="user-status-form" method="post" action="{%url 'user_block_status'%}">
@@ -53,7 +53,7 @@
                 </div>
                
             </div>
-        </header>
+        </header> {% endcomment %}
         <!-- card-header end// -->
         <div class="card-body">
             <div class="table-responsive">
