@@ -12,6 +12,7 @@ from django.db.models import Sum,Prefetch
 from datetime import datetime,date
 import csv
 from fpdf import FPDF
+from django.core.paginator import Paginator
 
 
 def admin_login1(request):
@@ -115,7 +116,11 @@ def dashboard(request):
 @login_required(login_url='admin_login1')
 def usermanagement_1(request):
     users = CustomUser.objects.all().order_by('id')
-    return render(request,'adminNest/usermanagement.html',{'users':users})
+    p=Paginator(users,6)
+    page=request.GET.get('page')
+    user_page=p.get_page(page)
+    page_nums='a'*user_page.paginator.num_pages
+    return render(request,'adminNest/usermanagement.html',{'users':users,'user_page':user_page,'page_nums':page_nums})
 
 
 @login_required(login_url='admin_login1')   
@@ -163,8 +168,13 @@ def user_block_status(request):
 @login_required(login_url='admin_login1')    
 def admin_review(request):
     reviews=ProductReview.objects.all()
+    p=Paginator(reviews,8)
+    page=request.GET.get('page')
+    review_page=p.get_page(page)
+    page_nums='a'*review_page.paginator.num_pages
+
     
-    return render(request,'adminNest/admin_review.html',{'reviews':reviews})
+    return render(request,'adminNest/admin_review.html',{'reviews':reviews,'review_page':review_page,'page_nums':page_nums})
 
 
 @login_required(login_url='admin_login1')

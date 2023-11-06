@@ -271,3 +271,16 @@ def razarypaycheck(request):
  
          
     return JsonResponse({'total_price': total_price})
+
+
+def order_invoice(request,invoice_id):
+    order=Order.objects.get(id=invoice_id)
+    products=OrderItem.objects.filter(order=invoice_id)
+    Variant_id=[product.variant.id for product in products]
+    totaloffer=0
+    for i in products:
+        totaloffer += i.variant.product.offer.discount_amount*i.quantity
+
+
+
+    return render(request,'checkout/payment_success.html',{'order':order,'products':products,'total_offer':totaloffer})

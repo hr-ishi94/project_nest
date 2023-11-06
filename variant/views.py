@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .forms import ImageForm
 from django.http import JsonResponse
 from django.db.models import Q
+from django.core.paginator import Paginator
 # Create your views here.
 
 @login_required(login_url='admin_login1')      
@@ -19,11 +20,17 @@ def product_variant(request):
     size_range= Size.objects.filter(is_available=True).order_by('id')
     color_name= Color.objects.filter(is_available=True).order_by('id')
     product=Product.objects.filter(is_available=True).order_by('id')
+    p=Paginator(variant,8)
+    page=request.GET.get('page')
+    variant_page=p.get_page(page)
+    page_nums='a'*variant_page.paginator.num_pages
     variant_list={
         'variant'    :variant,
         'size_range' :size_range,
         'color_name' :color_name, 
          'product'   :product,
+         'variant_page':variant_page,
+         'page_nums':page_nums,
     }
     return render(request,'variant/variant.html',{'variant_list':variant_list}) 
  
@@ -126,7 +133,11 @@ def product_size(request):
     if not request.user.is_superuser:
             return redirect('admin_login1')   
     products_size=Size.objects.filter(is_available =True).order_by('id')
-    return render(request,'size_management/size_management.html',{'products_size':products_size})
+    p=Paginator(products_size,4)
+    page=request.GET.get('page')
+    size_page=p.get_page(page)
+    page_nums='a'*size_page.paginator.num_pages
+    return render(request,'size_management/size_management.html',{'products_size':products_size,'size_page':size_page,'page_nums':page_nums})
 
 @login_required(login_url='admin_login1')  
 def add_size(request):
@@ -164,7 +175,11 @@ def product_color(request):
     if not request.user.is_superuser:
             return redirect('admin_login1')   
     products_color=Color.objects.filter(is_available=True).order_by('id')
-    return render(request,'color_management/color_management.html',{'products_color':products_color})
+    p=Paginator(products_color,5)
+    page=request.GET.get('page')
+    color_page=p.get_page(page)
+    page_nums='a'*color_page.paginator.num_pages
+    return render(request,'color_management/color_management.html',{'products_color':products_color,'color_page':color_page,'page_nums':page_nums})
 
 def add_color(request):
     if not request.user.is_superuser:

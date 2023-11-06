@@ -83,23 +83,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {%for order in orders%}
+                        {%for order in order_page%}
                         <tr>
                             <td>{{order.id}}</td>
                             <td><b>{{order.user.first_name}}</b></td>
                             <td>{{order.user.email}}</td>
                             <td>₹{{order.total_price}}</td>
                             <td> 
-                                {% if i.order_status.order_status == 'Pending' %}
-                                <span class="badge rounded-pill alert-secondary"  >{{ i.order_status.order_status }}</span>
-                                {% elif i.order_status.order_status == 'Processing' %}
-                                <span class="badge rounded-pill alert-warning">{{ i.order_status.order_status }}</span>
-                                {% elif i.order_status.order_status == 'Shipped' %}
-                                <span class="badge rounded-pill alert-primary">{{ i.order_status.order_status }}</span>
-                                {% elif i.order_status.order_status == 'Delivered' %}
-                                <span class="badge rounded-pill alert-success">{{ i.order_status.order_status }}</span>
-                                {% elif i.order_status.order_status == 'Cancelled' or i.order_status.order_status == 'Return' %}
-                                <span class="badge rounded-pill alert-danger">{{ i.order_status.order_status }}</span>
+                                {% if order.order_status.order_status == 'Pending' %}
+                                <span class="badge rounded-pill alert-secondary"  >{{ order.order_status.order_status }}</span>
+                                {% elif order.order_status.order_status == 'Processing' %}
+                                <span class="badge rounded-pill alert-warning">{{ order.order_status.order_status }}</span>
+                                {% elif order.order_status.order_status == 'Shipped' %}
+                                <span class="badge rounded-pill alert-primary">{{ order.order_status.order_status }}</span>
+                                {% elif order.order_status.order_status == 'Delivered' %}
+                                <span class="badge rounded-pill alert-success">{{ order.order_status.order_status }}</span>
+                                {% elif order.order_status.order_status == 'Cancelled' or order.order_status.order_status == 'Return' %}
+                                <span class="badge rounded-pill alert-danger">{{ order.order_status.order_status }}</span>
                                 {% endif %}
                             </td>
                             <td>{{order.created_at}}</td>
@@ -119,6 +119,19 @@
         <!-- card-body end// -->
     </div>
     <!-- card end// -->
+    <div class="pagination-area mt-30 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                {%for i in page_nums%}
+                <li class="page-item active"><a class="page-link" href="?page={{forloop.counter}}">{{forloop.counter}}</a></li>
+                {%endfor%}
+                
+                <li class="page-item active">
+                    <a class="page-link " href="?page={{order_page.paginator.num_pages}}"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
     
 </section>
 <script>

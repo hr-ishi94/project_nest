@@ -10,6 +10,7 @@ urlpatterns=[
     path('order_payment_sort/',views.order_payment_sort,name='order_payment_sort'),
     path('order_status_show/',views.order_status_show,name='order_status_show'),
     path('order_cancel/<int:cancel_id>',views.order_cancel,name='order_cancel'),
+    path('return_order/<int:return_id>',views.return_order,name='return_order'),
   
 
 ]

@@ -33,7 +33,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for c in products_size %}
+                        {% for c in size_page %}
                         <tr class="text-uppercase">
                             <td> {{c.id}} </td>
                            
@@ -86,6 +86,19 @@
             <!-- table-responsive//end -->
         </div>
         <!-- card-body end// -->
+    </div>
+    <div class="pagination-area mt-30 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                {%for i in page_nums%}
+                <li class="page-item active"><a class="page-link" href="?page={{forloop.counter}}">{{forloop.counter}}</a></li>
+                {%endfor%}
+                
+                <li class="page-item active">
+                    <a class="page-link " href="?page={{size_page.paginator.num_pages}}"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
     </div>
     
 </section>

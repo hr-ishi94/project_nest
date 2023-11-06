@@ -94,15 +94,17 @@
             </div>
             <!-- row // -->
             <div class="row">
-                <div class="col-lg-7">
+                <div class="">
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th width="40%">Product</th>
+                                    <th width="20%">Product</th>
                                     <th width="20%">Unit Price</th>
                                     <th width="20%">Quantity</th>
-                                    <th width="20%" class="text-end">Total</th>
+                                    <th width="20%">Total</th>
+                                    <th width="20%">Status</th>
+                                    <th width="20%" class="text-end">Change status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -122,8 +124,27 @@
                                     </td>
                                     <td>₹{{j.variant.product.product_price}}</td>
                                     <td>{{j.quantity}}</td>
-                                    <td class="text-end">₹{{j.variant.product.product_price | mul:j.quantity}}
+                                    <td >₹{{j.variant.product.product_price | mul:j.quantity}}
                                     </td>
+                                    {%for i in products%}
+                                    <td>{% if i.orderitem_status.item_status == 'Pending' %}
+                                        <span class="badge rounded-pill alert-secondary status-badge">
+                                            {{ i.orderitem_status.item_status }}</span>
+                                        {% elif i.orderitem_status.item_status == 'Processing' %}
+                                        <span class="badge rounded-pill alert-warning status-badge">
+                                            {{ i.orderitem_status.item_status }}</span>
+                                        {% elif i.orderitem_status.item_status == 'Shipped' %}
+                                        <span class="badge rounded-pill alert-primary status-badge">
+                                            {{ i.orderitem_status.item_status }}</span>
+                                        {% elif i.orderitem_status.item_status == 'Delivered' %}
+                                        <span class="badge rounded-pill alert-success status-badge">
+                                            {{ i.orderitem_status.item_status }}</span>
+                                        {% elif i.orderitem_status.item_status == 'Cancelled' or i.orderitem_status.item_status == 'Return' %}
+                                        <span class="badge rounded-pill alert-danger status-badge">
+                                            {{i.orderitem_status.item_status }}</span>
+                                        {% endif %}</td>
+                                        {%ENDFOR%}
+                                    <td class="text-end"></td>
                                 </tr>
                                 {%endfor%}
                                 
@@ -157,7 +178,7 @@
                     <!-- table-responsive// -->
                 </div>
                 <!-- col// -->
-                {%for i in products%}
+                
                 
                 <!-- col// -->
                 <div class="col-lg-5">

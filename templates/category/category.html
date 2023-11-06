@@ -54,7 +54,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for c in categories %}
+                        {% for c in product_page %}
                         <tr class="text-uppercase">
                             <td> {{c.id}} </td>
                             <td>
@@ -179,20 +179,19 @@
         </div>
         <!-- card-body end// -->
     </div>
-    {% comment %} <div class="pagination-area mt-30 mb-50">
+    <div class="pagination-area mt-30 mb-50">
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-start">
-                <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                <li class="page-item"><a class="page-link" href="#">02</a></li>
-                <li class="page-item"><a class="page-link" href="#">03</a></li>
-                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                <li class="page-item"><a class="page-link" href="#">16</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                {%for i in page_nums%}
+                <li class="page-item active"><a class="page-link" href="?page={{forloop.counter}}">{{forloop.counter}}</a></li>
+                {%endfor%}
+                
+                <li class="page-item active">
+                    <a class="page-link " href="?page={{product_page.paginator.num_pages}}"><i class="material-icons md-chevron_right"></i></a>
                 </li>
             </ul>
         </nav>
-    </div> {% endcomment %}
+    </div>
 </section>
 <div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">

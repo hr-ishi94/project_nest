@@ -14,7 +14,7 @@
     </div>
     
     <div class="card mb-4">
-        <header class="card-header">
+        {% comment %} <header class="card-header">
             <div class="row gx-3">
                 <div class="col-lg-4 col-md-6 me-auto">
                     <div class="input-group">
@@ -49,7 +49,7 @@
                 </div>
                
             </div>
-        </header>
+        </header> {% endcomment %}
         <!-- card-header end// -->
         <div class="card-body">
             <div class="table-responsive">
@@ -65,7 +65,7 @@
                           </tr>
                     </thead>
                     <tbody>
-                        {% for user in users %}
+                        {% for user in user_page%}
                         <tr class="text-uppercase">
                             <td style="text-align: center;">{{ user.id }}</td>
                             <td><b>{{ user.first_name }}</td>
@@ -136,6 +136,19 @@
             <!-- table-responsive//end -->
         </div>
         <!-- card-body end// -->
+    </div>
+    <div class="pagination-area mt-30 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                {%for i in page_nums%}
+                <li class="page-item active"><a class="page-link" href="?page={{forloop.counter}}">{{forloop.counter}}</a></li>
+                {%endfor%}
+                
+                <li class="page-item active">
+                    <a class="page-link " href="?page={{user_page.paginator.num_pages}}"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
     </div>
     
 </section>

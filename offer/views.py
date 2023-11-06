@@ -5,12 +5,18 @@ from django.contrib import messages
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 @login_required(login_url='admin_login1')
 def offer(request):
     offer=Offer.objects.filter(is_available=True).order_by('id')
+    p=Paginator(offer,8)
+    page=request.GET.get('page')
+    offer_page=p.get_page(page)
+    page_nums='a'*offer_page.paginator.num_pages
 
-    return render(request,'adminNest/offer.html',{'offer':offer})
+
+    return render(request,'adminNest/offer.html',{'offer':offer, 'page_nums':page_nums,'offer_page':offer_page})
 
 @login_required(login_url='admin_login1')
 def add_new_offer(request):

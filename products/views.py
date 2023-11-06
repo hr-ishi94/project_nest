@@ -14,7 +14,7 @@ def product(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
     product=Product.objects.filter(is_available=True).order_by('id')
-    p=Paginator(Product.objects.filter(is_available=True).order_by('id'),8)
+    p=Paginator(product,5)
     page=request.GET.get('page')
     product_page=p.get_page(page)
     page_nums='a'*product_page.paginator.num_pages

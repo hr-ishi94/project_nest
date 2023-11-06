@@ -6,11 +6,17 @@ from django.contrib import messages
 from datetime import datetime
 from django.utils import timezone
 import re
+from django.core.paginator import Paginator
 
 @login_required(login_url='admin_login1')
 def coupon(request):
     coupons=Coupon.objects.filter(is_available=True).order_by('id')
-    return render(request,'adminNest/coupon.html',{'coupons':coupons})
+    p=Paginator(coupons,8)
+    page=request.GET.get('page')
+    coupon_page=p.get_page(page)
+    page_nums='a'*coupon_page.paginator.num_pages
+    
+    return render(request,'adminNest/coupon.html',{'coupons':coupons,'coupon_page':coupon_page,'page_nums':page_nums})
 
 
 

@@ -8,15 +8,21 @@ from django.db.models import Q
 from userprofile.models import Wallet
 from .models import Order_Cancelled
 from django.contrib.auth.decorators import login_required
-
+from django.core.paginator import Paginator
+from order.models import *
 
 
 @login_required(login_url='admin_login1')
 def order_list(request):
     orders=Order.objects.all().order_by('-created_at')
     wallet= Wallet.objects.filter(user=request.user)
+    p=Paginator(orders,7)
+    page=request.GET.get('page')
+    order_page=p.get_page(page)
+    page_nums='a'*order_page.paginator.num_pages
+    
 
-    return render(request,'adminNest/order.html',{'orders':orders,'wallet':wallet})
+    return render(request,'adminNest/order.html',{'orders':orders,'wallet':wallet,'order_page':order_page,'page_nums':page_nums})
 
 
 @login_required(login_url='admin_login1')
@@ -260,6 +266,120 @@ def order_payment_sort(request):
         return render(request,'adminNest/order.html',context)
     else:
         return redirect('order_list')
+
+def return_order(request,return_id):
+    try:
+        orderitem_id=OrderItem.objects.get(id=return_id)
+        view_id=orderitem_id.order.id
+    except:
+        return redirect('userprofile')
+    
+    if request.method=='POST':
+        options=request.POST.get('options')
+        reason=request.POST.get('reason')
+
+        if options.strip=='':
+            messages.error(request,'Enter your options!')
+            return redirect('order_view_user',view_id)
+        if reason.strip() == '':
+            messages.error(request, "enter your Reasons!")
+            return redirect('order_view_user',view_id)
+        reason_checking=len(reason)
+        if not  reason_checking < 30:
+            messages.error(request, " reason want to minimum 30 words!")
+            return redirect('order_view_user',view_id)
+        
+        qty = orderitem_id.quantity
+        variant_id = orderitem_id.variant.id
+        order_id = Order.objects.get(id = orderitem_id.order.id)
+        
+        variant = Variant.objects.filter(id=variant_id).first()
+        variant.quantity = variant.quantity + qty
+        variant.save()
+        
+        order_item_id =Itemstatus.objects.get(id=6)
+        orderitem_id.orderitem_status = order_item_id
+        total_p = orderitem_id.price
+        print(total_p)
+        orderitem_id.save()
+        try:
+        # total item_status
+            all_order_item =OrderItem.objects.filter(order=view_id)
+        
+            # import pdb
+            # pdb.set_trace()
+            total_count = all_order_item.count()
+            
+            Pending = all_order_item.filter(orderitem_status__id=1).count()
+            Processing = all_order_item.filter(orderitem_status__id=2).count()
+            Shipped = all_order_item.filter(orderitem_status__id=3).count()
+            Delivered = all_order_item.filter(orderitem_status__id=4).count()
+            Cancelled = all_order_item.filter(orderitem_status__id=5).count()
+            Return = all_order_item.filter(orderitem_status__id=6).count()
+            
+            if total_count == Pending:
+                total_value = 1
+            elif total_count == Processing:
+                total_value = 2  
+            elif total_count == Shipped:
+                total_value = 3
+            elif total_count == Delivered:
+                total_value = 4
+            elif total_count == Cancelled:
+                total_value = 5
+            elif total_count == Return:
+                total_value = 6
+            else:
+                total_value = 4   
+        
+        except:
+            return redirect('order_view',view_id)
+            
+        change_all_items_status = Order.objects.get(id = view_id)
+        item_status_instance_all = Orderstatus.objects.get(id=total_value)
+        change_all_items_status.order_status = item_status_instance_all
+        change_all_items_status.save()
+        
+        
+        returnorder = Orderreturn.objects.create(user = request.user, order = order_id, options=options, reason=reason)
+        order = Order.objects.filter(id=view_id).first()
+        if variant.product.offer:
+            total_price = variant.product.product_price *qty
+            offer_price =variant.product.offer.discount_amount *qty
+            total_price = total_price-offer_price
+        else:   
+            
+            total_price = variant.product.product_price * qty
+        if order.return_total_price:
+            pass
+        else:    
+            order.return_total_price =int(order.total_price )
+        order.return_total_price = order.return_total_price - total_price    
+        if order.coupon:
+            if order.return_total_price <order.coupon.min_price:
+                total_price =total_price - order.coupon.coupon_discount_amount
+                order.coupon = None     
+            else:
+                pass   
+        else:
+            pass 
+        if order.return_total_price<0:
+                order.return_total_price =None          
+        order.save()
+        try:
+            wallet = Wallet.objects.get(user=request.user)
+            wallet.wallet += total_price
+            wallet.save()
+        except Wallet.DoesNotExist:
+            wallet = Wallet.objects.create(user=request.user, wallet=total_price)
+        
+        orderitem_id.save()
+        messages.success(request,'your order Return successfully! ')
+        return redirect('order_view_user',view_id)
+        # return redirect('userprofile')
+    
+    return redirect('order_view_user',view_id)
+        
 
     
 

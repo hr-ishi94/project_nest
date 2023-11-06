@@ -7,6 +7,7 @@ from .models import category
 from django.contrib import messages
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 @login_required(login_url='admin_login1')
@@ -14,7 +15,12 @@ def categories(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
     categories = category.objects.filter(is_available=True).order_by('id')
-    return render(request, 'category/category.html', {'categories': categories})
+    p=Paginator(categories,5)
+    page=request.GET.get('page')
+    product_page=p.get_page(page)
+    page_nums='a'*product_page.paginator.num_pages
+    return render(request, 'category/category.html', {'categories': categories,'product_page':product_page,
+        'page_nums':page_nums})
 
 @login_required(login_url='admin_login1')
 def add_category(request):

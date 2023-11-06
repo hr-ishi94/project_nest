@@ -152,10 +152,17 @@
                                     <td><strong>Order status</strong></td>
                                     <td>{{orderview.order_status.order_status}}</td>
                                 </tr>
+                                <tr>
+                                   
+                                   
+                                </tr>
                                 
                                 <br>
 
                             </table>
+                            {% if orderview.order_status.order_status == 'Delivered'  %}
+                            <td><h6> <a href="{% url 'order_invoice' products.0.order.id%}" ><span class="" >Download Invoice</span></a></h6></td>
+                            {% endif %}
                             <br>
 
                         </div>
@@ -180,7 +187,7 @@
                                     <th scope="col"></th>
                                     {% for i in products %}
                                     {% if i.orderitem_status.item_status == 'Delivered' %}
-                                    <th scope="col">Add Your Review</th>
+                                    <th scope="col"></th>
                                     {% endif %}
 
                                     {% endfor %}
@@ -231,7 +238,7 @@
                                         
                                         {% if i.orderitem_status.item_status == 'Delivered' %}
                                         
-                                        {% comment %} {% if date %}
+                                         {% if date %}
 
                                         <a href="#signin-modal-{{ forloop.counter }}" data-toggle="modal"><span class="btn btn-outline-primary-2" >Return</span></a>
                                         
@@ -247,7 +254,7 @@
                                                             <div class="form-tab">
                                                                 <ul class="nav nav-pills nav-fill" role="tablist">
                                                                     <li class="nav-item">
-                                                                        <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Return</a>
+                                                                        <h5 >Cancel Order</h5>
                                                                     </li>
                             
                                                                 </ul>
@@ -291,7 +298,7 @@
                                             </div><!-- End .modal-dialog -->
                                         </div><!-- End .modal -->
                                         {% else %}
-                                        {% endif %} {% endcomment %}
+                                        {% endif %} 
                                         
 
                                     
@@ -306,9 +313,7 @@
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-body">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">X</span>
-                                                        </button>
+                                                        
                                         
                                                         <div class="form-box">
                                                             <div class="form-tab">
@@ -353,7 +358,9 @@
                                     </td>
                                     {% if i.orderitem_status.item_status == 'Delivered' %}
                                     <td>
-                                        <a href="#review-modal-{{ forloop.counter }}" data-toggle="modal"><span class="btn btn-outline-primary-2" >Add Review</span></a>
+                                        <a href="#review-modal-{{ forloop.counter }}" data-toggle="modal"><span class="" >Add Review</span></a>
+                                        <br>
+                                       
                                         
                                         <div class="modal fade" id="review-modal-{{ forloop.counter }}" tabindex="-1" role="dialog" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
