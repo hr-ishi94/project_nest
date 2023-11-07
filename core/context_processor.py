@@ -6,14 +6,15 @@ from django.db.models import Sum
 
 
 def default(request):
-    categories=category.objects.all()
-    
+   
+    categories=category.objects.filter(is_available=True)
    
     try:
         cart_count=Cart.objects.filter(user=request.user).count()
         wishlist_count=Wishlist.objects.filter(user=request.user).count()
         wallet=Wallet.objects.filter(user=request.user)
-        total_balance=wallet.aggregate(Sum('wallet'))['wallet__sum']   
+        total_balance=wallet.aggregate(Sum('wallet'))['wallet__sum']
+       
     except:
         cart_count= False
         wishlist_count=False  

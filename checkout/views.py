@@ -2,6 +2,7 @@ import random
 import string
 from django.shortcuts import redirect, render
 from coupon.models import Coupon
+from django.db import transaction
 
 from wishlist.models import Wishlist
 from .models import Order, OrderItem
@@ -241,6 +242,37 @@ def placeorder(request):
             
     
             return JsonResponse({'status': "Your order has been placed successfully"})
+
+        if payment_mode == 'wallet':
+            # Check if the wallet balance is sufficient for the order
+            wallet = Wallet.objects.get(user=user)
+            if wallet.wallet >= neworder.total_price:
+                # Deduct the order amount from the wallet balance
+                wallet.wallet -= neworder.total_price
+                wallet.save()
+
+                # Save the order and related items
+                with transaction.atomic():
+                    neworder.save()
+                    
+                    for item in cart_items:
+                            OrderItem.objects.create(
+                            order=neworder,
+                            variant=item.variant,
+                            price=item.variant.product.product_price,
+                            quantity=item.product_qty,
+                
+            )
+                        # ... (create OrderItem instances and decrease product quantity)
+
+                # Clear the cart and session data
+                cart_items.delete()
+                del request.session['coupon_session']
+                del request.session['coupon_id']
+
+                return JsonResponse({'status': "Your order has been placed successfully"})
+            else:
+                return JsonResponse({'status': "Your wallet amount is very low"})    
     
         
         

@@ -99,7 +99,14 @@ def product_show(request,prod_id,img_id):
 
 def search_view(request):
     query=request.GET.get('query')
-    variant_images=(VariantImage.objects.filter(variant__product__product_name__icontains=query,is_available=True).distinct('variant__product__product_name'))
+    category = request.GET.get('category')
+
+    if category=='':
+        variant_images=(VariantImage.objects.filter(variant__product__product_name__icontains=query,is_available=True).distinct('variant__product__product_name'))
+    else:
+        variant_images=(VariantImage.objects.filter(variant__product__product_name__icontains=query,is_available=True,variant__product__category=category).distinct('variant__product__product_name'))
+
+    
     try:
         cart_count=Cart.objects.filter(user=request.user).count()
         wishlist_count=Wishlist.objects.filter(user=request.user).count()

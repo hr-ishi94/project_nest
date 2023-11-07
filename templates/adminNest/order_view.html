@@ -101,9 +101,9 @@
                                 <tr>
                                     <th width="20%">Product</th>
                                     <th width="20%">Unit Price</th>
-                                    <th width="20%">Quantity</th>
+                                    <th width="10%">Quantity</th>
                                     <th width="20%">Total</th>
-                                    <th width="20%">Status</th>
+                                    <th width="10%">Status</th>
                                     <th width="20%" class="text-end">Change status</th>
                                 </tr>
                             </thead>
@@ -126,25 +126,36 @@
                                     <td>{{j.quantity}}</td>
                                     <td >₹{{j.variant.product.product_price | mul:j.quantity}}
                                     </td>
-                                    {%for i in products%}
-                                    <td>{% if i.orderitem_status.item_status == 'Pending' %}
+                                    <td>{% if j.orderitem_status.item_status == 'Pending' %}
                                         <span class="badge rounded-pill alert-secondary status-badge">
-                                            {{ i.orderitem_status.item_status }}</span>
-                                        {% elif i.orderitem_status.item_status == 'Processing' %}
+                                            {{ j.orderitem_status.item_status }}</span>
+                                        {% elif j.orderitem_status.item_status == 'Processing' %}
                                         <span class="badge rounded-pill alert-warning status-badge">
-                                            {{ i.orderitem_status.item_status }}</span>
-                                        {% elif i.orderitem_status.item_status == 'Shipped' %}
+                                            {{ j.orderitem_status.item_status }}</span>
+                                        {% elif j.orderitem_status.item_status == 'Shipped' %}
                                         <span class="badge rounded-pill alert-primary status-badge">
-                                            {{ i.orderitem_status.item_status }}</span>
-                                        {% elif i.orderitem_status.item_status == 'Delivered' %}
+                                            {{ j.orderitem_status.item_status }}</span>
+                                        {% elif j.orderitem_status.item_status == 'Delivered' %}
                                         <span class="badge rounded-pill alert-success status-badge">
-                                            {{ i.orderitem_status.item_status }}</span>
-                                        {% elif i.orderitem_status.item_status == 'Cancelled' or i.orderitem_status.item_status == 'Return' %}
+                                            {{ j.orderitem_status.item_status }}</span>
+                                        {% elif j.orderitem_status.item_status == 'Cancelled' or i.orderitem_status.item_status == 'Return' %}
                                         <span class="badge rounded-pill alert-danger status-badge">
-                                            {{i.orderitem_status.item_status }}</span>
+                                            {{j.orderitem_status.item_status }}</span>
                                         {% endif %}</td>
-                                        {%ENDFOR%}
-                                    <td class="text-end"></td>
+                                    <td class="text-end"><form class="status-form" action="{% url 'change_status' %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="{{ j.variant.id }}" name="variant_id">
+                                        <input type="hidden" value="{{ j.id }}" name="orderitem_id">
+                                        <div class="col-lg-11 col-11 col-md-10">
+                                           
+                                            <select class="form-select status-select" id='select' name="status">
+                                                {% for item in item_status_o %}
+                                                <option value="{{ item.id }}" {% if item.id == j.orderitem_status.id %}selected{% endif %}>
+                                                    {{ item.item_status }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </form></td>
                                 </tr>
                                 {%endfor%}
                                 
@@ -179,46 +190,6 @@
                 </div>
                 <!-- col// -->
                 
-                
-                <!-- col// -->
-                <div class="col-lg-5">
-                    
-                    <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                        {% if i.orderitem_status.item_status == 'Pending' %}
-                        <span class="badge rounded-pill alert-secondary status-badge">
-                            {{ i.orderitem_status.item_status }}</span>
-                        {% elif i.orderitem_status.item_status == 'Processing' %}
-                        <span class="badge rounded-pill alert-warning status-badge">
-                            {{ i.orderitem_status.item_status }}</span>
-                        {% elif i.orderitem_status.item_status == 'Shipped' %}
-                        <span class="badge rounded-pill alert-primary status-badge">
-                            {{ i.orderitem_status.item_status }}</span>
-                        {% elif i.orderitem_status.item_status == 'Delivered' %}
-                        <span class="badge rounded-pill alert-success status-badge">
-                            {{ i.orderitem_status.item_status }}</span>
-                        {% elif i.orderitem_status.item_status == 'Cancelled' or i.orderitem_status.item_status == 'Return' %}
-                        <span class="badge rounded-pill alert-danger status-badge">
-                            {{i.orderitem_status.item_status }}</span>
-                        {% endif %}
-                    </div>
-                    <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                        <form class="status-form" action="{% url 'change_status' %}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" value="{{ i.variant.id }}" name="variant_id">
-                            <input type="hidden" value="{{ i.id }}" name="orderitem_id">
-                            <div class="col-lg-11 col-11 col-md-10">
-                                <label for='select'><h5>Change status </h5></label>
-                                <select class="form-select status-select" id='select' name="status">
-                                    {% for item in item_status_o %}
-                                    <option value="{{ item.id }}" {% if item.id == i.orderitem_status.id %}selected{% endif %}>
-                                        {{ item.item_status }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                {%endfor%}
             </div>
         </div>
         <!-- card-body end// -->
