@@ -50,28 +50,18 @@
                         </a>
                         
                     </li>
-                    <li class="menu-item ">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" href="{% url 'product_variant'%}">
-                            <i class="icon material-icons md-stars"></i> 
+                            <i class="icon material-icons md-stars"></i>
                             <span class="text">Variants</span>
                         </a>
-                        
+                        <div class="submenu">
+                            <a href="{%url 'product_size' %}">Size</a>
+                            <a href="{%url 'product_color' %}">Color</a>
+                        </div>
                     </li>
-                    <li class="menu-item">
-                        <a class="menu-link" href="{%url 'product_size' %}">
-                            <i class="icon material-icons md-shopping_cart"></i>
-                            <span class="text">Size</span>
-                        </a>
-                       
-                    </li>
-                    <li class="menu-item ">
-                    <li class="menu-item">
-                        <a class="menu-link" href="{%url 'product_color' %}">
-                            <i class="icon material-icons md-shopping_cart"></i>
-                            <span class="text">Color</span>
-                        </a>
-                       
-                    </li>
+                    
+                    
                     <li class="menu-item">
                         <a class="menu-link" href="{%url 'usermanagement_1' %}">
                             <i class="icon material-icons md-person"></i>
@@ -110,27 +100,9 @@
                        
                     </li>
                 </ul>
-                <hr />
-                <ul class="menu-aside">
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="#">
-                            <i class="icon material-icons md-settings"></i>
-                            <span class="text">Settings</span>
-                        </a>
-                        <div class="submenu">
-                            <a href="page-settings-1.html">Setting sample 1</a>
-                            <a href="page-settings-2.html">Setting sample 2</a>
-                        </div>
-                    </li>
-                    <li class="menu-item">
-                        <a class="menu-link" href="page-blank.html">
-                            <i class="icon material-icons md-local_offer"></i>
-                            <span class="text"> Starter page </span>
-                        </a>
-                    </li>
-                </ul>
-                <br />
-                <br />
+                
+                
+               
             </nav>
         </aside>
         <main class="main-wrap">
@@ -167,10 +139,10 @@
                         <li class="dropdown nav-item">
                             <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="{% static 'assets-admin/imgs/people/avatar-2.png' %}" alt="User" /></a>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                                <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
-                                <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                                <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                                <a class="dropdown-item" href="{%url 'usermanagement_1' %}"><i class="material-icons md-perm_identity"></i>users</a>
+                                {% comment %} <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a> {% endcomment %}
+                                <a class="dropdown-item" href="{% url 'dashboard' %}"><i class="material-icons md-account_balance_wallet"></i>Dashboard</a>
+                                <a class="dropdown-item" href="{%url 'sales_report'%}"><i class="material-icons md-receipt"></i>Sales report</a>
                                 <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item text-danger" href="{%url 'admin_logout1'%}"><i class="material-icons md-exit_to_app"></i>Logout</a>

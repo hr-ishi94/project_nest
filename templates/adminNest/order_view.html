@@ -90,6 +90,21 @@
                         </div>
                     </article>
                 </div>
+               
+                
+                {% if orderview.payment_mode == 'wallet' or orderview.payment_mode == 'razorpay' %}
+                <div>
+                    <br>
+                    <h5 class='text-brand'>Rs {{orderview.total_price}} from {{orderview.user.first_name}} via {{orderview.payment_mode}} payment mode and is credited to XXXX-XXXX-XXXX-4567 </h5>
+                    
+                  
+                    {% comment %} <a href="" class=" btn btn-brand ">verify</a> {% endcomment %}
+                    
+                   
+
+
+                </div>
+                {% endif %}
                 <!-- col// -->
             </div>
             <!-- row // -->
