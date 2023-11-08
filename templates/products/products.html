@@ -112,75 +112,7 @@
                              </script>
 
                              <!-- Edit Modal HTML -->
-                             <div class="modal" id="confirmEdit{{ user.id }}">
-                                 <div class="modal-dialog">
-                                     <div class="modal-content">
-                                         <div class="modal-header">
-                                             <h3 class="modal-title fs-5" id="exampleModalLabel">Edit Product</h3>
-                                             <button type="button" class="btn-close" onclick="closeEditModal({{ user.id }})"
-                                                 aria-label="Close"></button>
-                                         </div>
-                                         <div class="modal-body">
-                                             <form action="{% url 'product_edit' user.id %}" enctype="multipart/form-data" method="POST">
-                                                 {% csrf_token %}
-                                                 <div style="width: 100px;" class=""></div>
-                                                 <div class="form-outline mb-4">
-                                                     <label class="form-label" for="form3Example3cg">Name</label>
-                                                     <input name="product_name" value="{{ user.product_name }}" type="text"
-                                                         id="form3Example3cg" class="form-control form-control-lg" />
-                                                 </div>
-                                                 <div class="form-outline mb-4">
-                                                     <label class="form-label" for="form3Example3cg">Price</label>
-                                                     <input name="product_price" value="{{ user.product_price }}" type="text"
-                                                         id="form3Example3cg" class="form-control form-control-lg" />
-                                                 </div>
-                                                 <div class="form-outline mb-4">
-                                                     <label class="form-label" for="form3Example3cg">Category</label>
-                                                     <select class="form-select" name="category">
-                                                         {% for c in categories %}
-                                                             {% if c.categories == user.category.categories %}
-                                                                 <option value="{{ c.id }}" selected>{{ c.categories }}</option>
-                                                             {% else %}
-                                                                 <option value="{{ c.id }}">{{ c.categories }}</option>
-                                                             {% endif %}
-                                                         {% endfor %}
-                                                     </select>
-                                                 </div>
-                                                 <div class="form-outline mb-4">
-                                                    <label class="form-label" for="form3Example3cg">offer</label>
-                                                    <select class="form-select" name="offer">
-                                                        {% if user.offer %}
-                                                        {% for c in offer %}
-                                                            {% if c.offer_name == user.offer.offer_name %}
-                                                                <option value="{{ c.id }}" selected>{{ c.offer_name }}</option>    
-                                                            {% else %}
-                                                                <option value="{{ c.id }}">{{ c.offer_name }}</option>
-                                                                <option value="">No offer</option>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                        {% else %}
-                                                        <option value="">No offer</option>
-                                                        {% for c in offer %}
-                                                        <option value="{{ c.id }}">{{ c.offer_name }}</option>
-                                                        {% endfor %}
-                                                        {% endif %}
-                                                    </select>
-                                                </div>
-                                                 <div class="form-outline mb-4">
-                                                     <label class="form-label" for="form3Example3cg">Description</label>
-                                                     <input name='product_description' value="{{user.product_description}}" type="text"
-                                                         id="form3Example3cg" class="form-control form-control-lg" />
-                                                 </div>
-                                                 <div class="d-flex justify-content-center">
-                                                     <button type="submit"
-                                                         class="btn btn-primary text-center"
-                                                         type="submit">Save</button>
-                                                 </div>
-                                             </form>
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
+                             
 
                              <!-- JavaScript Function to Close Edit Modal -->
                              <script>
@@ -213,29 +145,7 @@
                                 </script>
 
                                 <!-- Modal HTML -->
-                                <div class="modal" id="exampleModal{{forloop.counter}}">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Delete</h1>
-                                            <button type="button" class="btn-close" onclick="closeModal({{forloop.counter}})"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            delete product {{user.product_name }}
-                                        </div>
-                                        <div class="modal-footer">
-                                            <!-- one here -->
-                                            <form action="{% url 'product_delete' user.id %}">
-                                                <button type="submit" class="btn btn"
-                                                    style="background-color: rgb(239, 7, 54); color:rgb(255, 255, 255)">Confirm</button>
-                                            </form>
-                                            <button type="button" class="btn btn-secondary"
-                                                onclick="closeModal({{forloop.counter}})">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                </div>
+                                
 
                                 <!-- JavaScript Function to Close Modal -->
                                 <script>
@@ -335,4 +245,99 @@
         </div>
     </div>
 </div>
+{% for user in product_page %}
+<div class="modal" id="confirmEdit{{ user.id }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title fs-5" id="exampleModalLabel">Edit Product</h3>
+                <button type="button" class="btn-close" onclick="closeEditModal({{ user.id }})"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'product_edit' user.id %}" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    <div style="width: 100px;" class=""></div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Name</label>
+                        <input name="product_name" value="{{ user.product_name }}" type="text"
+                            id="form3Example3cg" class="form-control form-control-lg" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Price</label>
+                        <input name="product_price" value="{{ user.product_price }}" type="text"
+                            id="form3Example3cg" class="form-control form-control-lg" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Category</label>
+                        <select class="form-select" name="category">
+                            {% for c in categories %}
+                                {% if c.categories == user.category.categories %}
+                                    <option value="{{ c.id }}" selected>{{ c.categories }}</option>
+                                {% else %}
+                                    <option value="{{ c.id }}">{{ c.categories }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-outline mb-4">
+                       <label class="form-label" for="form3Example3cg">offer</label>
+                       <select class="form-select" name="offer">
+                           {% if user.offer %}
+                           {% for c in offer %}
+                               {% if c.offer_name == user.offer.offer_name %}
+                                   <option value="{{ c.id }}" selected>{{ c.offer_name }}</option>    
+                               {% else %}
+                                   <option value="{{ c.id }}">{{ c.offer_name }}</option>
+                                   <option value="">No offer</option>
+                               {% endif %}
+                           {% endfor %}
+                           {% else %}
+                           <option value="">No offer</option>
+                           {% for c in offer %}
+                           <option value="{{ c.id }}">{{ c.offer_name }}</option>
+                           {% endfor %}
+                           {% endif %}
+                       </select>
+                   </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Description</label>
+                        <input name='product_description' value="{{user.product_description}}" type="text"
+                            id="form3Example3cg" class="form-control form-control-lg" />
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit"
+                            class="btn btn-primary text-center"
+                            type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="exampleModal{{forloop.counter}}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Delete</h1>
+                <button type="button" class="btn-close" onclick="closeModal({{forloop.counter}})"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                delete product {{user.product_name }}
+            </div>
+            <div class="modal-footer">
+                <!-- one here -->
+                <form action="{% url 'product_delete' user.id %}">
+                    <button type="submit" class="btn btn"
+                        style="background-color: rgb(239, 7, 54); color:rgb(255, 255, 255)">Confirm</button>
+                </form>
+                <button type="button" class="btn btn-secondary"
+                    onclick="closeModal({{forloop.counter}})">Close</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+{% endfor %}
 {%endblock content%}
