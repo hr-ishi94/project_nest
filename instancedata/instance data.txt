@@ -1,0 +1,13 @@
+instance id :
+ssh -i "cartserver.pem" ubuntu@ec2-51-20-72-210.eu-north-1.compute.amazonaws.com
+
+to restart gunicorn
+sudo supervisorctl restart guni:gunicorn
+
+to run our nginx server:
+sudo service nginx restart
+
+dbuser:
+postgres
+dbpwd:
+postgres
