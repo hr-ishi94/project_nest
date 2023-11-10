@@ -10,6 +10,8 @@ from django.core.paginator import Paginator
 
 @login_required(login_url='admin_login1')
 def coupon(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     coupons=Coupon.objects.filter(is_available=True).order_by('id')
     p=Paginator(coupons,8)
     page=request.GET.get('page')
@@ -22,6 +24,8 @@ def coupon(request):
 
 @login_required(login_url='admin_login1')
 def add_coupon(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     if request.method == 'POST':
         coupon_name = request.POST.get('coupon_name')
         coupon_code = request.POST.get('coupon_code')
@@ -78,12 +82,16 @@ def add_coupon(request):
 
 @login_required(login_url='admin_login1') 
 def delete_coupon(request,delete_id):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     coupon=Coupon.objects.get(id=delete_id)
     coupon.delete()
     return redirect('coupon')
 
 @login_required(login_url='admin_login1')    
 def edit_coupon(request, coupon_id):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     if request.method == 'POST':
         coupon_name = request.POST.get('coupon_name')
         coupon_code = request.POST.get('coupon_code')

@@ -5,7 +5,7 @@ from coupon.models import Coupon
 from django.db import transaction
 
 from wishlist.models import Wishlist
-from .models import Order, OrderItem
+from .models import Order, OrderItem,OrderAddress
 from products.models import Product,Size,Color
 from variant.models import Variant,VariantImage
 from cart.models import Cart
@@ -216,6 +216,20 @@ def placeorder(request):
             neworder.payment_id = generate_random_payment_id(10)
 
         neworder.save()
+
+        OrderAddress.objects.create(
+            order=neworder,
+            first_name=address.first_name,
+            last_name=address.last_name,
+            phone=address.phone,
+            email=address.email,
+            address=address.address,
+            country=address.country,
+            state=address.state,
+            city=address.city,
+            pincode=address.pincode,
+            order_note=address.order_note,
+        )
 
         # Create OrderItem instances for each cart item
         for item in cart_items:

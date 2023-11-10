@@ -403,111 +403,16 @@ justify-content: center;
                                                     </div>
                                                     <h6>{{average_rating}} out of 5 ({{reviews.count}})</h6>
                                                 </div>
-                                                {% comment %} <div class="progress">
-                                                    <span>5 star</span>
-                                                    <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%    </div>
-                                                </div>
-                                                <div class="progress">
-                                                    <span>4 star</span>
-                                                    <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                                                </div>
-                                                <div class="progress">
-                                                    <span>3 star</span>
-                                                    <div class="progress-bar" role="progressbar" style="width: 45%" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">45%</div>
-                                                </div>
-                                                <div class="progress">
-                                                    <span>2 star</span>
-                                                    <div class="progress-bar" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">65%</div>
-                                                </div>
-                                                <div class="progress mb-30">
-                                                    <span>1 star</span>
-                                                    <div class="progress-bar" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">85%</div>
-                                                </div>
-                                                <a href="#" class="font-xs text-muted">How are ratings calculated?</a> {% endcomment %}
+                                                
                                             </div>
                                         </div>
                                     </div>
-                                    <!--comment form-->
-                                    {% comment %} <div class="comment-form">
-                                        <h4 class="mb-15">Add a review</h4>
-                                        <div class="product-rate d-inline-block mb-30"></div>
-                                        <div class="row">
-                                            <div class="col-lg-8 col-md-12">
-                                                <form class="form-contact comment_form" action="#" id="commentForm">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="form-group">
-                                                                <textarea class="form-control w-100" name="comment" id="comment" cols="30" rows="9" placeholder="Write Comment"></textarea>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <input class="form-control" name="name" id="name" type="text" placeholder="Name" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <input class="form-control" name="email" id="email" type="email" placeholder="Email" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <div class="form-group">
-                                                                <input class="form-control" name="website" id="website" type="text" placeholder="Website" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <button type="submit" class="button button-contactForm">Submit Review</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div> {% endcomment %}
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {% comment %} <div class="row mt-60">
-                        <div class="col-12">
-                            <h2 class="section-title style-1 mb-30">Related products</h2>
-                        </div>
-                        <div class="col-12">
-                            <div class="row related-products">
-                                {%for i in img%}
-                                <div class="col-lg-3 col-md-4 col-12 col-sm-6">
-                                    <div class="product-cart-wrap hover-up">
-                                        <div class="product-img-action-wrap">
-                                            <div class="product-img product-img-zoom">
-                                                <a href="shop-product-right.html" tabindex="0">
-                                                    <img class="default-img" src="{{i.image.0.url}}" alt="" />
-                                                    <img class="hover-img" src="{% static 'assets/imgs/shop/product-2-2.jpg' %}" alt="" />
-                                                </a>
-                                            </div>
-                                            <div class="product-action-1">
-                                                <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-search"></i></a>
-                                                <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="shop-wishlist.html" tabindex="0"><i class="fi-rs-heart"></i></a>
-                                                <a aria-label="Compare" class="action-btn small hover-up" href="shop-compare.html" tabindex="0"><i class="fi-rs-shuffle"></i></a>
-                                            </div>
-                                            <div class="product-badges product-badges-position product-badges-mrg">
-                                                <span class="hot">Hot</span>
-                                            </div>
-                                        </div>
-                                        <div class="product-content-wrap">
-                                            <h2><a href="shop-product-right.html" tabindex="0">Ulstra Bass Headphone</a></h2>
-                                            <div class="rating-result" title="90%">
-                                                <span> </span>
-                                            </div>
-                                            <div class="product-price">
-                                                <span>$238.85 </span>
-                                                <span class="old-price">$245.8</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {%endfor%}
-                            </div>
-                        </div>
-                    </div> {% endcomment %}
+                    
                 </div>
             </div>
         </div>
@@ -588,7 +493,7 @@ justify-content: center;
                 if (response.status === 'No such product found' || response.status === 'Only few quantity available' || response.status === 'Product already in Wishlist' ) {
                     swal.fire("Error!", response.status, "error");
                     $('.cartdata').load(location.href + " .cartdata");
-                } else if (response.status === 'Product added successfully in Wishlist') { 
+                } else if (response.status === 'Product added successfully in wishlist') { 
                     swal.fire("", response.status, "success");
                     $('.cartdata').load(location.href + " .cartdata");
                 } else if (response.status === 'you are not login please Login to continue') {

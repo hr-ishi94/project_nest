@@ -86,10 +86,7 @@ def dashboard(request):
         status_cancel = (status_cancel_count / Total) * 100
         status_return = (status_return_count / Total) * 100
     except:
-        # status_pending_count=0
-        # status_delivery_count=0
-        # status_cancel_count=0
-        # status_return_count=0
+       
         status_delivery=0
         status_cancel=0
         status_return=0
@@ -99,7 +96,6 @@ def dashboard(request):
         'delivery_count':status_delivery_count,
         'cancel_count':status_cancel_count,
         'pending_count':status_pending_count,
-
         'totalsale':totalsale,
         'totalearnings':totalearnings,
         'status_delivery':status_delivery,
@@ -115,6 +111,8 @@ def dashboard(request):
 
 @login_required(login_url='admin_login1')
 def usermanagement_1(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     users = CustomUser.objects.all().order_by('id')
     p=Paginator(users,6)
     page=request.GET.get('page')
@@ -125,6 +123,7 @@ def usermanagement_1(request):
 
 @login_required(login_url='admin_login1')   
 def blockuser(request,user_id):
+    
     if not request.user.is_superuser:
         return redirect('admin_login1')
     user =CustomUser.objects.get(id=user_id)
@@ -138,6 +137,8 @@ def blockuser(request,user_id):
 
 @login_required(login_url='admin_login1')
 def user_sort(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     search= request.POST.get('search')
     if search is None or search.strip()=='':
         messages.error(request,'Field cannot be empty! ')
@@ -152,6 +153,8 @@ def user_sort(request):
 
 @login_required(login_url='admin_login1')
 def user_block_status(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     name=request.POST.get('name')
     if name=='Active':
         users=CustomUser.objects.filter(is_active=True)
@@ -167,6 +170,8 @@ def user_block_status(request):
 
 @login_required(login_url='admin_login1')    
 def admin_review(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     reviews=ProductReview.objects.all()
     p=Paginator(reviews,8)
     page=request.GET.get('page')
@@ -280,7 +285,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 
 styles = getSampleStyleSheet()
 
-
+@login_required(login_url='admin_login1')
 def generate_pdf(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')

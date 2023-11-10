@@ -5,7 +5,7 @@ from django.contrib import messages
 from .models import Address,Wallet
 from cart.models import Cart
 from wishlist.models import Wishlist
-from checkout.models import Order,OrderItem,Itemstatus
+from checkout.models import Order,OrderItem,Itemstatus,OrderAddress
 from variant.models import VariantImage
 
 from django.utils import timezone
@@ -394,43 +394,112 @@ def delete_address(request,delete_id):
     messages.success(request,' Address deleted successfully!')
     
     return redirect('userprofile')
+# @login_required(login_url='user_login1')
+# def order_view_user(request,view_id):
+#     try:
+#         orderview = Order.objects.get(id=view_id)
+#         address = Address.objects.get(id=orderview.address.id)
+#         products = OrderItem.objects.filter(order=view_id)
+#         variant_ids = [product.variant.id for product in products]
+#         image = VariantImage.objects.filter(variant__id__in=variant_ids).distinct('variant__color')
+#         item_status_o=Itemstatus.objects.all()
+#         cart_count =Cart.objects.filter(user =request.user).count()
+#         wishlist_count =Wishlist.objects.filter(user=request.user).count()
+#         date = orderview.update_at + timedelta(days=3)
+
+#         if date >= timezone.now():
+#             date = True
+#         else:
+#             date = False
+#         # print(date,'aaaaaaaaaaaaaaaaaaa')   
+        
+#         context = {
+#             'date' :date,
+#             'orderview': orderview,
+#             'address': address,
+#             'products': products,
+#             'image' :image,
+#             'item_status_o' : item_status_o ,
+#             'wishlist_count':wishlist_count, 
+#             'cart_count':cart_count,
+            
+#         }   
+#         return render(request,'userprofile/order_view_user.html',context)
+
+#     except Order.DoesNotExist:
+#         print("Order does not exist")
+#     except Address.DoesNotExist:
+#         print("Address does not exist")
+#     return redirect('userprofile') 
+
+from django.shortcuts import get_object_or_404
+
 @login_required(login_url='user_login1')
-def order_view_user(request,view_id):
+def order_view_user(request, view_id):
     try:
         orderview = Order.objects.get(id=view_id)
-        address = Address.objects.get(id=orderview.address.id)
+        # Retrieve the associated OrderAddress or return None
+        order_address = OrderAddress.objects.filter(order=orderview).first()
+        
+        if order_address:
+            address = {
+                'first_name': order_address.first_name,
+                'last_name': order_address.last_name,
+                'phone': order_address.phone,
+                'email': order_address.email,
+                'address': order_address.address,
+                'country': order_address.country,
+                'state': order_address.state,
+                'city': order_address.city,
+                'pincode': order_address.pincode,
+                'order_note': order_address.order_note,
+            }
+        else:
+            # If there is no associated OrderAddress, use the original address
+            address = {
+                'first_name': orderview.address.first_name,
+                'last_name': orderview.address.last_name,
+                'phone': orderview.address.phone,
+                'email': orderview.address.email,
+                'address': orderview.address.address,
+                'country': orderview.address.country,
+                'state': orderview.address.state,
+                'city': orderview.address.city,
+                'pincode': orderview.address.pincode,
+                'order_note': orderview.address.order_note,
+            }
+
         products = OrderItem.objects.filter(order=view_id)
         variant_ids = [product.variant.id for product in products]
         image = VariantImage.objects.filter(variant__id__in=variant_ids).distinct('variant__color')
-        item_status_o=Itemstatus.objects.all()
-        cart_count =Cart.objects.filter(user =request.user).count()
-        wishlist_count =Wishlist.objects.filter(user=request.user).count()
+        item_status_o = Itemstatus.objects.all()
+        cart_count = Cart.objects.filter(user=request.user).count()
+        wishlist_count = Wishlist.objects.filter(user=request.user).count()
         date = orderview.update_at + timedelta(days=3)
 
         if date >= timezone.now():
             date = True
         else:
             date = False
-        # print(date,'aaaaaaaaaaaaaaaaaaa')   
-        
+
         context = {
-            'date' :date,
+            'date': date,
             'orderview': orderview,
             'address': address,
             'products': products,
-            'image' :image,
-            'item_status_o' : item_status_o ,
-            'wishlist_count':wishlist_count, 
-            'cart_count':cart_count,
-            
-        }   
-        return render(request,'userprofile/order_view_user.html',context)
+            'image': image,
+            'item_status_o': item_status_o,
+            'wishlist_count': wishlist_count,
+            'cart_count': cart_count,
+        }
+
+        return render(request, 'userprofile/order_view_user.html', context)
 
     except Order.DoesNotExist:
         print("Order does not exist")
     except Address.DoesNotExist:
         print("Address does not exist")
-    return redirect('userprofile') 
 
+    return redirect('userprofile')
             
 

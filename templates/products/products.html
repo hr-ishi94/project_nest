@@ -133,7 +133,7 @@
                                 style="background-color: rgb(239, 7, 54); color:rgb(255, 255, 255)"
                                 onclick="showModal({{forloop.counter}})">
                                 <i class="ti ti-trash"></i>
-                                Delete
+                                unlist
                                 </button>
 
                                 <!-- JavaScript Function to Show Modal -->
@@ -319,12 +319,12 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Delete</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">unlist</h1>
                 <button type="button" class="btn-close" onclick="closeModal({{forloop.counter}})"
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                delete product {{user.product_name }}
+                Unlist product {{user.product_name }} from products?
             </div>
             <div class="modal-footer">
                 <!-- one here -->

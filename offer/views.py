@@ -9,6 +9,8 @@ from django.core.paginator import Paginator
 
 @login_required(login_url='admin_login1')
 def offer(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     offer=Offer.objects.filter(is_available=True).order_by('id')
     p=Paginator(offer,8)
     page=request.GET.get('page')
@@ -20,6 +22,8 @@ def offer(request):
 
 @login_required(login_url='admin_login1')
 def add_new_offer(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     if request.method=='POST':
         offername=request.POST.get('offername')
         discount=request.POST.get('discount')
@@ -64,6 +68,8 @@ def add_new_offer(request):
 
 @login_required(login_url='admin_login1')
 def delete_offer(request,delete_id):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     try:    
         offer=Offer.objects.get(id=delete_id)
         offer.is_available=False
@@ -77,6 +83,8 @@ def delete_offer(request,delete_id):
 
 @login_required(login_url='admin_login1')
 def edit_offer(request,edit_id):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     if request.method == 'POST':
         offername = request.POST.get('offername')
         discount = request.POST.get('discount')

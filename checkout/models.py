@@ -19,7 +19,7 @@ class Itemstatus(models.Model):
     
 class Order(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
     total_price = models.FloatField(null=False)
     payment_mode = models.CharField(max_length=150, null= False)
     payment_id = models.CharField(max_length=250, null=True)
@@ -51,4 +51,21 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.order.id, self.order.tracking_no}"
+
+class OrderAddress(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    phone = models.CharField(max_length=50, blank=True)
+    email = models.EmailField(max_length=50)
+    address = models.CharField(max_length=50, blank=True)
+    country = models.CharField(max_length=50, blank=True)
+    state = models.CharField(max_length=50, blank=True)
+    city = models.CharField(max_length=50, blank=True)
+    pincode = models.CharField(max_length=50, blank=True)
+    order_note = models.CharField(max_length=100, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
          

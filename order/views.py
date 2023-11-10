@@ -14,6 +14,9 @@ from order.models import *
 
 @login_required(login_url='admin_login1')
 def order_list(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
+    
     orders=Order.objects.all().order_by('-created_at')
     wallet= Wallet.objects.filter(user=request.user)
     p=Paginator(orders,7)
@@ -27,6 +30,8 @@ def order_list(request):
 
 @login_required(login_url='admin_login1')
 def order_view(request, view_id):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     
     try:
         orderview = Order.objects.get(id=view_id)
@@ -52,6 +57,8 @@ def order_view(request, view_id):
 
 @login_required(login_url='admin_login1')
 def order_search(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     search = request.POST.get('search')
     if search is None or search.strip() == '':
         messages.error(request,'Field cannot empty!')
@@ -66,8 +73,9 @@ def order_search(request):
         return redirect('order_list')
     return render(request,'adminNest/order.html',context)
 
-@login_required(login_url='admin_login1')
+
 def order_cancel(request,cancel_id):
+   
     
     try:
         orderitem_id = OrderItem.objects.get(id=cancel_id)
@@ -108,13 +116,28 @@ def order_cancel(request,cancel_id):
                 
               
                 
-            total_price = variant.product.product_price * qty
+            if variant.product.offer:
+                total_price = variant.product.product_price *qty
+                offer_price =variant.product.offer.discount_amount *qty
+                total_price = total_price-offer_price
+            else:   
+                
+                total_price = variant.product.product_price * qty
             if order.return_total_price:
                 pass
             else:    
                 order.return_total_price =int(order.total_price )
             order.return_total_price = order.return_total_price - total_price 
-              
+
+            if order.coupon:
+                if order.return_total_price <order.coupon.min_price:
+                    total_price =total_price - order.coupon.coupon_discount_amount
+                    order.coupon = None  
+                    
+                else:
+                    pass   
+            else:
+                pass   
             
             if order.return_total_price<0:
                 order.return_total_price =None          
@@ -173,6 +196,8 @@ def order_cancel(request,cancel_id):
 
 @login_required(login_url='admin_login1')
 def order_status_show(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     name=request.POST.get('name')
     if name=='Pending':
         order=Order.objects.filter(order_status=1)
@@ -199,6 +224,8 @@ def order_status_show(request):
     
 @login_required(login_url='admin_login1')
 def change_status(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -255,6 +282,8 @@ def change_status(request):
 
 @login_required(login_url='admin_login1')
 def order_payment_sort(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     name=request.POST.get('name')
     if name=='cod':
         order=Order.objects.filter(payment_mode='cod')
